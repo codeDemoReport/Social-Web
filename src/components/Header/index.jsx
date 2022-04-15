@@ -134,6 +134,7 @@ function Header(props) {
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
     </Menu>
   );
 
@@ -156,7 +157,7 @@ function Header(props) {
             component="div"
             sx={{ display: { xs: "none", sm: "block" } }}
           >
-            MUI
+            PROJECT
           </Typography>
           <Search>
             <SearchIconWrapper>
