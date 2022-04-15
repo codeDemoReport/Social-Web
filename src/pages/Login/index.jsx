@@ -16,7 +16,6 @@ import * as Yup from "yup";
 import Copyright from "../../components/Copyright";
 import CustomField from "../../components/CustomField";
 import { login } from "../../redux/action";
-import history from "../../utils/history";
 import "./style.scss";
 
 function Login(props) {
