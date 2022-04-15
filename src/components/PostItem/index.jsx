@@ -28,6 +28,7 @@ function PostItem(props) {
     <section className="postItem">
       <Card className="postItem__card">
         <CardHeader
+          sx={{ padding: "8px 16px" }}
           avatar={
             <Avatar
               sx={{ bgcolor: red[500], cursor: "pointer" }}
@@ -44,8 +45,13 @@ function PostItem(props) {
           title="Shrimp and Chorizo Paella"
           subheader="September 14, 2016"
         />
-        <CardContent>
-          <Typography variant="body2" color="text.primary" gutterBottom>
+        <CardContent sx={{ padding: "8px 16px" }}>
+          <Typography
+            variant="body2"
+            color="text.primary"
+            gutterBottom
+            sx={{ fontSize: 15 }}
+          >
             This impressive paella is a perfect party dish and a fun meal to
             cook together with your guests. Add 1 cup of frozen peas along with
             the mussels, if you like.
@@ -84,10 +90,10 @@ function PostItem(props) {
                 R
               </Avatar>
               <Box className="postItem__theme">
-                <Typography variant="h6" className="postItem__wrapper--name">
+                <Typography variant="h6" sx={{ color: "#333", fontSize: 15 }}>
                   Shrimp and Chorizo Paella
                 </Typography>
-                <Typography variant="p" className="postItem__wrapper--comment">
+                <Typography variant="p" sx={{ color: "#333", fontSize: 15 }}>
                   Bình luận đầu tiên
                 </Typography>
               </Box>

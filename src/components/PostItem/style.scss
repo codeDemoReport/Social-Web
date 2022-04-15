@@ -26,17 +26,7 @@
         position: relative;
         display: flex;
         align-items: center;
-        margin: 20px 0;
-
-        &--name {
-            color: #333;
-            font-size: 0.9rem;
-        }
-
-        &--comment {
-            margin-top: 8px;
-            font-size: 0.9rem;
-        }
+        margin-top: 10px;
     }
 
     &__input {
