@@ -5,7 +5,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Post from "./pages/Post";
 import history from "./utils/history";
-import Register from "./pages/Register"
+import Register from "./pages/Register";
 import VerifyEmail from "./components/VerifyEmai";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -14,13 +14,12 @@ import BackdropSimple from "./components/BackdropSimple";
 import PrivateRouter from "./customRouter/PrivateRouter";
 
 function App() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    if (token)
-      dispatch(checkToken(token))
-  }, [dispatch])
+    const token = localStorage.getItem("token");
+    if (token) dispatch(checkToken(token));
+  }, [dispatch]);
 
   return (
     <div className="App">
