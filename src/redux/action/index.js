@@ -47,3 +47,29 @@ export const register = (data) => async (dispatch) => {
     toastError(error.response.data.msg);
   }
 }
+
+export const logout = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: LOGIN,
+      payload: {}
+    })
+    localStorage.removeItem('token');
+    localStorage.removeItem('info')
+  } catch (error) {
+    toastError(error.response.data.msg);
+  }
+}
+
+export const checkToken = (token) => async (dispatch) => {
+  try {
+    const headers = { authorization: `Bearer ${token}` };
+    const res = await axios.get(`${url}/user/token/info`, { headers })
+    dispatch({
+      type: LOGIN,
+      payload: res.data.user
+    })
+  } catch (error) {
+    toastError(error.response.data.msg);
+  }
+}
