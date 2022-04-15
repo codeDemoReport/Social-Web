@@ -1,5 +1,10 @@
 import axios from "axios";
-import { EMAIL_VERIFY, GET_LIST_POST, LOGIN } from "../../utils/constant";
+import {
+  EMAIL_VERIFY,
+  GET_LIST_POST,
+  LOGIN,
+  LOADING,
+} from "../../utils/constant";
 import history from "../../utils/history";
 import { toastError, toastSuccess } from "../../utils/toast";
 
@@ -8,6 +13,10 @@ const url = "http://192.168.68.51:3000/api";
 export const login = (params) => async (dispatch) => {
   const { checkRemember } = params;
   try {
+    dispatch({
+      type: LOADING,
+      payload: true,
+    });
     const response = await axios.post(`${url}/auth/login`, { ...params });
 
     dispatch({
@@ -27,24 +36,44 @@ export const login = (params) => async (dispatch) => {
     if (checkRemember) {
       localStorage.setItem("prevEmail", response.data.user.email);
     }
+    dispatch({
+      type: LOADING,
+      payload: false,
+    });
     toastSuccess(response.data.msg);
     history.push("/");
   } catch (error) {
     toastError(error.response.data.msg);
+    dispatch({
+      type: LOADING,
+      payload: false,
+    });
   }
 };
 
 export const register = (data) => async (dispatch) => {
   try {
+    dispatch({
+      type: LOADING,
+      payload: true,
+    });
     const res = await axios.post(`${url}/auth/register`, data);
     dispatch({
       type: EMAIL_VERIFY,
       payload: data.email,
     });
+    dispatch({
+      type: LOADING,
+      payload: false,
+    });
     toastSuccess(res.data.msg);
     history.push("/verify-email");
   } catch (error) {
     toastError(error.response.data.msg);
+    dispatch({
+      type: LOADING,
+      payload: false,
+    });
   }
 };
 
@@ -70,7 +99,7 @@ export const checkToken = (token) => async (dispatch) => {
       payload: res.data.user,
     });
   } catch (error) {
-    toastError(error.response.data.msg);
+    toastError("Please login now!");
   }
 };
 

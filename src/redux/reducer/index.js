@@ -1,10 +1,16 @@
 import { combineReducers } from "redux";
-import { LOGIN, EMAIL_VERIFY, GET_LIST_POST } from "../../utils/constant";
+import {
+  LOGIN,
+  EMAIL_VERIFY,
+  GET_LIST_POST,
+  LOADING,
+} from "../../utils/constant";
 
 const initialState = {
   infoUser: {},
   emailVerify: "",
   postList: [],
+  loading: false,
 };
 
 function reducer(state = initialState, action) {
@@ -25,6 +31,12 @@ function reducer(state = initialState, action) {
       return {
         ...state,
         emailVerify: action.payload,
+      };
+    }
+    case LOADING: {
+      return {
+        ...state,
+        loading: action.payload,
       };
     }
     default:
