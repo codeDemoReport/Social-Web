@@ -20,7 +20,8 @@ import { red } from "@mui/material/colors";
 import React, { useState } from "react";
 import "./style.scss";
 
-function PostItem(props) {
+function PostItem({ postList }) {
+  console.log("Log : postList", postList);
   const [valueComment, setValueComment] = useState("");
   const [like, setLike] = useState(false);
 
