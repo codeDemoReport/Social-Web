@@ -1,5 +1,6 @@
 export const LOGIN = "LOGIN";
 export const EMAIL_VERIFY = "EMAIL_VERIFY";
+export const LOADING = "LOADING";
 
 export const registerField = [
 {
