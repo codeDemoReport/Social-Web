@@ -1,9 +1,12 @@
 export const LOGIN = "LOGIN";
+
+export const GET_LIST_POST = "GET_LIST_POST";
+
 export const EMAIL_VERIFY = "EMAIL_VERIFY";
 export const LOADING = "LOADING";
 
 export const registerField = [
-{
+  {
     id: 1,
     name: "fullName",
     label: "Full Name",
@@ -31,4 +34,4 @@ export const registerField = [
     placeholder: "Enter your confirm password...",
     type: "password",
   },
-]
+];
