@@ -11,14 +11,19 @@ import {
 import { Box } from "@mui/system";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 import Copyright from "../../components/Copyright";
 import CustomField from "../../components/CustomField";
+import { login } from "../../redux/action";
+import history from "../../utils/history";
 import "./style.scss";
 
 function Login(props) {
   const [remember, setRemember] = useState(false);
   const prevEmail = localStorage.getItem("prevEmail");
+
+  const dispatch = useDispatch();
 
   const initialValues = {
     email: prevEmail || "",
@@ -30,7 +35,12 @@ function Login(props) {
   });
 
   const handleSubmitForm = (values) => {
-    console.log("Log : values", values);
+    dispatch(
+      login({
+        ...values,
+        checkRemember: remember,
+      })
+    );
   };
 
   return (
