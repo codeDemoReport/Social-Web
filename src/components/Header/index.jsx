@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
+import { Card } from "@mui/material";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
@@ -14,7 +15,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import MoreIcon from "@mui/icons-material/MoreVert";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -56,33 +56,68 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-function Header(props) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+const styleCardNotify = {
+  width: "300px",
+  height: "70px",
+  margin: "0px",
+  display: "flex",
+};
 
+function Header(props) {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [isNotifyOpen, setNotifyOpen] = useState(false);
   const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const hanleNotifyClose = () => {
+    setNotifyOpen(false);
+  };
+
+  const handleNotifyOpen = () => {
+    setNotifyOpen(true);
+  };
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
-
   const handleMenuClose = () => {
     setAnchorEl(null);
-    handleMobileMenuClose();
-  };
-
-  const handleMobileMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
   };
 
   const menuId = "primary-search-account-menu";
+  const renderNotifies = (
+    <Menu
+      sx={{ marginTop: "50px", marginRight: "100px" }}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      keepMounted
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      open={isNotifyOpen}
+      onClose={hanleNotifyClose}
+    >
+      <MenuItem sx={{ padding: "3px 0px" }}>
+        <Card sx={styleCardNotify} title="Tran Van Luc">
+          <AccountCircle
+            fontSize="large"
+            sx={{ marginTop: "15px", marginLeft: "3px" }}
+          />
+          <Typography></Typography>
+        </Card>
+      </MenuItem>
+      <MenuItem sx={{ padding: "3px 0px" }}>
+        <Card sx={styleCardNotify}>dasdas</Card>
+      </MenuItem>
+    </Menu>
+  );
+
   const renderMenu = (
     <Menu
+      sx={{ marginTop: "50px" }}
       anchorEl={anchorEl}
       anchorOrigin={{
         vertical: "top",
@@ -99,58 +134,6 @@ function Header(props) {
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-    </Menu>
-  );
-
-  const mobileMenuId = "primary-search-account-menu-mobile";
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="show 17 new notifications"
-          color="inherit"
-        >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
     </Menu>
   );
 
@@ -199,6 +182,7 @@ function Header(props) {
               size="large"
               aria-label="show 17 new notifications"
               color="inherit"
+              onClick={handleNotifyOpen}
             >
               <Badge badgeContent={17} color="error">
                 <NotificationsIcon />
@@ -214,23 +198,13 @@ function Header(props) {
               color="inherit"
             >
               <AccountCircle />
-            </IconButton>
-          </Box>
-          <Box sx={{ display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
+              <Typography>Tran Van Luc</Typography>
             </IconButton>
           </Box>
         </Toolbar>
       </AppBar>
       {renderMenu}
+      {renderNotifies}
     </Box>
   );
 }
