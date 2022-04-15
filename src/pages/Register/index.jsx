@@ -3,16 +3,19 @@ import { Avatar, Button, Grid, Link, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { Form, Formik } from "formik";
 import React from "react";
+import { useDispatch } from "react-redux";
 
 import * as Yup from "yup";
 import Copyright from "../../components/Copyright";
 import CustomField from "../../components/CustomField";
+import { register } from "../../redux/action";
 
 import { registerField } from "../../utils/constant";
 
 import "./style.scss";
 
 function Register(props) {
+  const dispatch = useDispatch();
   const initialValues = {
     fullName: "",
     email: "",
@@ -32,6 +35,10 @@ function Register(props) {
     ),
   });
 
+  const handleRegister = (values) => {
+    dispatch(register(values));
+  };
+
   return (
     <section className="register">
       <Box className="register__container">
@@ -46,7 +53,7 @@ function Register(props) {
         <Formik
           initialValues={initialValues}
           validationSchema={validateSchema}
-          onSubmit={(values) => console.log(values)}
+          onSubmit={handleRegister}
         >
           <Form>
             {registerField.map((element) => (

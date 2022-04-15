@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LOGIN } from "../../utils/constant";
+import { EMAIL_VERIFY, LOGIN } from "../../utils/constant";
 import history from "../../utils/history";
 import { toastError, toastSuccess } from "../../utils/toast";
 
@@ -33,3 +33,17 @@ export const login = (params) => async (dispatch) => {
     toastError(error.response.data.msg);
   }
 };
+
+export const register = (data) => async (dispatch) => {
+  try {
+    const res = await axios.post(`${url}/auth/register`, data)
+    dispatch({
+      type: EMAIL_VERIFY,
+      payload: data.email
+    })
+    toastSuccess(res.data.msg);
+    history.push("/verify-email");
+  } catch (error) {
+    toastError(error.response.data.msg);
+  }
+}
