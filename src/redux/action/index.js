@@ -5,6 +5,8 @@ import {
   LOGIN,
   LOADING,
   CREATE_POST,
+  DELETE_POST,
+  EDIT_POST,
 } from "../../utils/constant";
 import history from "../../utils/history";
 import { toastError, toastSuccess } from "../../utils/toast";
@@ -86,6 +88,7 @@ export const logout = () => async (dispatch) => {
     });
     localStorage.removeItem("token");
     localStorage.removeItem("info");
+    history.push("/");
   } catch (error) {
     toastError(error.response.data.msg);
   }
@@ -132,6 +135,48 @@ export const createPost = (params) => async (dispatch) => {
 
     dispatch({
       type: CREATE_POST,
+      payload: response.data,
+    });
+
+    if (response.data.success) toastSuccess(response.data.success);
+  } catch (error) {
+    toastError(error.response.data.error);
+    if (error.response.data.status === 456) dispatch(logout());
+  }
+};
+
+export const deletePost = (params) => async (dispatch) => {
+  const token = localStorage.getItem("token");
+  const headers = { authorization: `Bearer ${token}` };
+  const { id } = params;
+  try {
+    const response = await axios.delete(`${url}/post/${id}`, { headers });
+
+    dispatch({
+      type: DELETE_POST,
+      payload: response.data,
+    });
+
+    if (response.data.success) toastSuccess(response.data.success);
+  } catch (error) {
+    toastError(error.response.data.error);
+    if (error.response.data.status === 456) dispatch(logout());
+  }
+};
+
+export const editPost = (params) => async (dispatch) => {
+  const token = localStorage.getItem("token");
+  const headers = { authorization: `Bearer ${token}` };
+  const { id } = params;
+  try {
+    const response = await axios.put(
+      `${url}/post/${id}`,
+      { ...params },
+      { headers }
+    );
+
+    dispatch({
+      type: EDIT_POST,
       payload: response.data,
     });
 

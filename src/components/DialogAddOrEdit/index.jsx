@@ -3,13 +3,13 @@ import { Box } from "@mui/system";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
 import * as Yup from "yup";
-import { createPost } from "../../redux/action";
+import { createPost, editPost } from "../../redux/action";
 import CustomField from "../CustomField";
 import "./style.scss";
 import { useDispatch, useSelector } from "react-redux";
 
-function DialogAddOrEdit({ open, setOpen }) {
-  const [image, setImage] = useState();
+function DialogAddOrEdit({ open, setOpen, temp, setTemp }) {
+  const [image, setImage] = useState("");
 
   const dispatch = useDispatch();
   const { infoUser } = useSelector((state) => state.reducer);
@@ -17,24 +17,38 @@ function DialogAddOrEdit({ open, setOpen }) {
   const handleClose = () => {
     setOpen(false);
     setImage("");
+    setTemp({});
   };
 
   const initialValues = {
-    content: "",
+    content: temp._id ? temp.content : "",
   };
+
   const validateSchema = Yup.object().shape({
     content: Yup.string().required("Required!"),
   });
 
   const handleSubmitForm = (values) => {
-    dispatch(
-      createPost({
-        ...values,
-        photo: URL.createObjectURL(image),
-        userId: infoUser.userId,
-      })
-    );
+    if (temp._id) {
+      dispatch(
+        editPost({
+          ...values,
+          id: temp._id,
+          photo: image ? URL.createObjectURL(image) : temp.photo,
+        })
+      );
+    } else {
+      dispatch(
+        createPost({
+          ...values,
+          photo: image ? URL.createObjectURL(image) : "",
+          userId: infoUser.userId,
+        })
+      );
+    }
     setOpen(false);
+    setImage("");
+    setTemp({});
   };
 
   return (
@@ -45,7 +59,9 @@ function DialogAddOrEdit({ open, setOpen }) {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">Create Post</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          {temp._id ? "Edit Post" : "Create Post"}
+        </DialogTitle>
         <DialogContent sx={{ width: 500 }}>
           <Formik
             initialValues={initialValues}
@@ -70,13 +86,15 @@ function DialogAddOrEdit({ open, setOpen }) {
                 <label htmlFor="upload-image" className="dialog__upload">
                   Chọn ảnh
                 </label>
-                {image && (
+                {image ? (
                   <img
                     src={URL.createObjectURL(image)}
                     alt=""
                     className="dialog__image"
                   />
-                )}
+                ) : temp._id ? (
+                  <img src={temp.photo} alt="" className="dialog__image" />
+                ) : null}
               </Box>
               <Box className="dialog__btn">
                 <Button type="submit" variant="contained">
