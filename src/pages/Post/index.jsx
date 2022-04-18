@@ -1,28 +1,60 @@
-import React, { useState, useEffect } from "react";
-import PostItem from "./../../components/PostItem";
-import "./style.scss";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import DialogAddOrEdit from "../../components/DialogAddOrEdit";
 import PostStatus from "../../components/PostStatus";
-import { useDispatch, useSelector } from "react-redux";
-import { getListPost } from "./../../redux/action";
+import DialogDelete from "./../../components/DialogDelete";
+import PostItem from "./../../components/PostItem";
+import { deletePost, getListPost } from "./../../redux/action";
+import "./style.scss";
 
 function Post(props) {
-  const [open, setOpen] = useState(false);
+  const [openAddOrEdit, setOpenAddOrEdit] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [temp, setTemp] = useState({});
 
   const dispatch = useDispatch();
-  const { postList, dataCreate } = useSelector((state) => state.reducer);
+  const { postList, dataCreate, dataDelete } = useSelector(
+    (state) => state.reducer
+  );
 
   useEffect(() => {
     dispatch(getListPost());
-  }, [dataCreate, dispatch]);
+  }, [dataCreate, dataDelete, dispatch]);
+
+  const handleDelete = () => {
+    dispatch(
+      deletePost({
+        id: temp._id,
+      })
+    );
+    setOpenDelete(false);
+  };
 
   return (
     <section>
-      <PostStatus setOpen={setOpen} />
+      <PostStatus setOpen={setOpenAddOrEdit} />
       {postList.map((item, index) => (
-        <PostItem key={index} post={item} />
+        <PostItem
+          key={index}
+          post={item}
+          setTemp={setTemp}
+          setOpenDelete={setOpenDelete}
+          setOpenAddOrEdit={setOpenAddOrEdit}
+        />
       ))}
-      <DialogAddOrEdit open={open} setOpen={setOpen} />
+      <DialogAddOrEdit
+        open={openAddOrEdit}
+        setOpen={setOpenAddOrEdit}
+        temp={temp}
+        setTemp={setTemp}
+      />
+      <DialogDelete
+        open={openDelete}
+        setOpen={setOpenDelete}
+        temp={temp}
+        setTemp={setTemp}
+        handleClickBtnOK={handleDelete}
+      />
     </section>
   );
 }

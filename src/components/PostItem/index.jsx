@@ -20,13 +20,13 @@ import {
 } from "@mui/material";
 import { red } from "@mui/material/colors";
 import React, { useState } from "react";
-import "./style.scss";
 import formatDateTime from "./../../utils/dateTime";
+import "./style.scss";
 
-function PostItem({ post }) {
+function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
   const [valueComment, setValueComment] = useState("");
   const [like, setLike] = useState(false);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
   const handleClick = (event) => {
@@ -36,10 +36,16 @@ function PostItem({ post }) {
     setAnchorEl(null);
   };
 
-  const handleClickEdit = () => {};
+  const handleClickEdit = () => {
+    setTemp(post);
+    setAnchorEl(null);
+    setOpenAddOrEdit(true);
+  };
 
   const handleClickDelete = () => {
+    setTemp(post);
     setAnchorEl(null);
+    setOpenDelete(true);
   };
 
   const handleClickBtnComment = () => {
@@ -66,7 +72,7 @@ function PostItem({ post }) {
       open={open}
       onClose={handleClose}
     >
-      <MenuItem onClick={handleClose}>Sửa bài viết</MenuItem>
+      <MenuItem onClick={handleClickEdit}>Sửa bài viết</MenuItem>
       <MenuItem onClick={handleClickDelete}>Xóa bài viết</MenuItem>
     </Menu>
   );

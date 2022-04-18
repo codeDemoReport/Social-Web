@@ -8,7 +8,7 @@ import CustomField from "../CustomField";
 import "./style.scss";
 import { useDispatch, useSelector } from "react-redux";
 
-function DialogAddOrEdit({ open, setOpen }) {
+function DialogAddOrEdit({ open, setOpen, temp, setTemp }) {
   const [image, setImage] = useState();
 
   const dispatch = useDispatch();
@@ -17,6 +17,7 @@ function DialogAddOrEdit({ open, setOpen }) {
   const handleClose = () => {
     setOpen(false);
     setImage("");
+    setTemp({});
   };
 
   const initialValues = {
@@ -45,7 +46,9 @@ function DialogAddOrEdit({ open, setOpen }) {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">Create Post</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          {temp._id ? "Edit Post" : "Create Post"}
+        </DialogTitle>
         <DialogContent sx={{ width: 500 }}>
           <Formik
             initialValues={initialValues}
