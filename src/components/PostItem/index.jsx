@@ -20,6 +20,8 @@ import { red } from "@mui/material/colors";
 import React, { useState } from "react";
 import CustomDropdown from "../CustomDropdown";
 import formatDateTime from "./../../utils/dateTime";
+import { useDispatch } from "react-redux";
+import { createComment } from "../../redux/action";
 import "./style.scss";
 
 function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
@@ -27,6 +29,7 @@ function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
   const [like, setLike] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const dispatch = useDispatch();
 
   const handleShowDropdown = (event) => {
     setAnchorEl(event.currentTarget);
@@ -45,10 +48,8 @@ function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
   };
 
   const handleClickBtnComment = () => {
-    console.log({
-      id: post.userId._id,
-      valueComment,
-    });
+    const token = localStorage.getItem("token");
+    dispatch(createComment({ content: valueComment, id: post._id }, token));
   };
 
   const dataDropdown = [
