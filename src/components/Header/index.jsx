@@ -6,6 +6,8 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { logout } from "../../redux/action";
+import CustomDropdown from "../CustomDropdown";
+import RenderNotify from "./RenderNotify";
 
 import {
   IconButton,
@@ -14,26 +16,12 @@ import {
   Toolbar,
   Box,
   AppBar,
-  ListItemButton,
-  MenuItem,
-  Menu,
-  Divider,
-  Avatar,
-  ListItemAvatar,
-  ListItemText,
-  ListItem,
-  List,
-  Paper,
   Button,
 } from "@mui/material";
 
-import DeleteIcon from "@mui/icons-material/Delete";
-import ClearAllIcon from "@mui/icons-material/ClearAll";
-
 function Header(props) {
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [isOpenMenuAuth, setOpenMenuAuth] = useState(false);
   const [isNotifyOpen, setNotifyOpen] = useState(false);
-  const isMenuOpen = Boolean(anchorEl);
   const { reducer } = useSelector((state) => state);
   const [data, setData] = useState(reducer.infoUser);
   const dispatch = useDispatch();
@@ -42,20 +30,16 @@ function Header(props) {
     if (reducer.infoUser) setData(reducer.infoUser);
   }, [reducer.infoUser, dispatch]);
 
-  const hanleNotifyClose = () => {
-    setNotifyOpen(false);
-  };
-
   const handleNotifyOpen = () => {
     setNotifyOpen(true);
   };
 
   const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
+    setOpenMenuAuth(true);
   };
 
   const handleMenuClose = () => {
-    setAnchorEl(null);
+    setOpenMenuAuth(false);
   };
 
   const handleLogout = () => {
@@ -63,110 +47,20 @@ function Header(props) {
     handleMenuClose();
   };
 
-  const menuId = "primary-search-account-menu";
-  const renderNotifies = (
-    <Menu
-      sx={{ marginTop: "50px", marginRight: "100px" }}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={isNotifyOpen}
-      onClose={hanleNotifyClose}
-    >
-      <Box style={{ width: 300, height: 400 }}>
-        <Paper variant="outlined">
-          <IconButton style={{ fontSize: 13 }}>
-            <ClearAllIcon style={{ marginRight: "5px" }} />
-            Delete All
-          </IconButton>
-          <Divider />
-          <nav>
-            <List>
-              <ListItem>
-                <ListItemButton style={{ padding: "0px", margin: "0px" }}>
-                  <ListItemAvatar>
-                    <Avatar />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={data.fullName}
-                    secondary={"has created a post"}
-                  />
-                </ListItemButton>
-                <Badge color="primary" variant="dot"></Badge>
-                <IconButton>
-                  <DeleteIcon />
-                </IconButton>
-              </ListItem>
-              <Divider />
-              <ListItem>
-                <ListItemButton>
-                  <ListItemAvatar>
-                    <Avatar />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={data.fullName}
-                    secondary={"has created a post"}
-                  />
-                </ListItemButton>
-              </ListItem>
-              <Divider />
-              <ListItem>
-                <ListItemButton>
-                  <ListItemAvatar>
-                    <Avatar />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={data.fullName}
-                    secondary={"has created a post"}
-                  />
-                </ListItemButton>
-              </ListItem>
-              <Divider />
-              <ListItem>
-                <ListItemButton>
-                  <ListItemAvatar>
-                    <Avatar />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={data.fullName}
-                    secondary={"has created a post"}
-                  />
-                </ListItemButton>
-              </ListItem>
-            </List>
-          </nav>
-        </Paper>
-      </Box>
-    </Menu>
-  );
-
-  const renderMenu = (
-    <Menu
-      sx={{ marginTop: "50px" }}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-      <MenuItem onClick={handleLogout}>Logout</MenuItem>
-    </Menu>
-  );
-
+  const listMenu = [
+    {
+      title: "Profile",
+      event: handleMenuClose,
+    },
+    {
+      title: "Account",
+      event: handleMenuClose,
+    },
+    {
+      title: "Logout",
+      event: handleLogout,
+    },
+  ];
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -238,7 +132,6 @@ function Header(props) {
                   size="large"
                   edge="end"
                   aria-label="account of current user"
-                  aria-controls={menuId}
                   aria-haspopup="true"
                   onClick={handleProfileMenuOpen}
                   color="inherit"
@@ -272,8 +165,16 @@ function Header(props) {
           )}
         </Toolbar>
       </AppBar>
-      {renderMenu}
-      {renderNotifies}
+      <CustomDropdown
+        isOpenMenu={isOpenMenuAuth}
+        setIsOpenMenu={setOpenMenuAuth}
+        listItem={listMenu}
+      />
+      <RenderNotify
+        isNotifyOpen={isNotifyOpen}
+        setIsNotifyOpen={setNotifyOpen}
+        listNotify={[]}
+      />
     </Box>
   );
 }
