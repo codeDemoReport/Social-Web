@@ -13,16 +13,63 @@ import {
   CardMedia,
   Divider,
   IconButton,
+  Menu,
+  MenuItem,
   TextField,
   Typography,
 } from "@mui/material";
 import { red } from "@mui/material/colors";
 import React, { useState } from "react";
 import "./style.scss";
+import formatDateTime from "./../../utils/dateTime";
 
-function PostItem(props) {
+function PostItem({ post }) {
   const [valueComment, setValueComment] = useState("");
   const [like, setLike] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleClickEdit = () => {};
+
+  const handleClickDelete = () => {
+    setAnchorEl(null);
+  };
+
+  const handleClickBtnComment = () => {
+    console.log({
+      id: post.userId._id,
+      valueComment,
+    });
+  };
+
+  const renderDropdown = (
+    <Menu
+      sx={{ marginTop: "50px" }}
+      anchorEl={anchorEl}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      id="dropdown"
+      keepMounted
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      open={open}
+      onClose={handleClose}
+    >
+      <MenuItem onClick={handleClose}>Sửa bài viết</MenuItem>
+      <MenuItem onClick={handleClickDelete}>Xóa bài viết</MenuItem>
+    </Menu>
+  );
 
   return (
     <section className="postItem">
@@ -38,12 +85,18 @@ function PostItem(props) {
             </Avatar>
           }
           action={
-            <IconButton aria-label="settings">
+            <IconButton
+              aria-label="settings"
+              aria-controls={open ? "dropdown" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+              onClick={handleClick}
+            >
               <MoreVertIcon />
             </IconButton>
           }
-          title="Shrimp and Chorizo Paella"
-          subheader="September 14, 2016"
+          title={post.userId.fullName}
+          subheader={formatDateTime(post.updatedAt)}
         />
         <CardContent sx={{ padding: "8px 16px" }}>
           <Typography
@@ -52,14 +105,12 @@ function PostItem(props) {
             gutterBottom
             sx={{ fontSize: 15 }}
           >
-            This impressive paella is a perfect party dish and a fun meal to
-            cook together with your guests. Add 1 cup of frozen peas along with
-            the mussels, if you like.
+            {post.content}
           </Typography>
           <CardMedia
             component="img"
             height="400"
-            image="https://c4.wallpaperflare.com/wallpaper/799/418/374/chelsea-fc-champions-league-trophy-football-soccer-hd-wallpaper-preview.jpg"
+            image={post.photo}
             alt="Paella dish"
             className="postItem__image"
           />
@@ -120,13 +171,18 @@ function PostItem(props) {
                 value={valueComment}
                 onChange={(e) => setValueComment(e.target.value)}
               />
-              <Button className="postItem__icon" disabled={!valueComment}>
+              <Button
+                className="postItem__icon"
+                disabled={!valueComment}
+                onClick={handleClickBtnComment}
+              >
                 <SendIcon />
               </Button>
             </Box>
           </Box>
         </CardActions>
       </Card>
+      {renderDropdown}
     </section>
   );
 }
