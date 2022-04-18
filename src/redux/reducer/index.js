@@ -6,6 +6,7 @@ import {
   LOADING,
   CREATE_POST,
   DELETE_POST,
+  EDIT_POST,
 } from "../../utils/constant";
 
 const initialState = {
@@ -15,6 +16,7 @@ const initialState = {
   loading: false,
   dataCreate: {},
   dataDelete: {},
+  dataEdit: {},
 };
 
 function reducer(state = initialState, action) {
@@ -41,6 +43,12 @@ function reducer(state = initialState, action) {
       return {
         ...state,
         dataDelete: { ...action.payload },
+      };
+    }
+    case EDIT_POST: {
+      return {
+        ...state,
+        dataEdit: { ...action.payload },
       };
     }
     case EMAIL_VERIFY: {

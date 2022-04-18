@@ -20,26 +20,29 @@ import {
 } from "@mui/material";
 
 function Header(props) {
-  const [isOpenMenuAuth, setOpenMenuAuth] = useState(false);
   const [isNotifyOpen, setNotifyOpen] = useState(false);
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+
+  const dispatch = useDispatch();
   const { reducer } = useSelector((state) => state);
   const [data, setData] = useState(reducer.infoUser);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (reducer.infoUser) setData(reducer.infoUser);
   }, [reducer.infoUser, dispatch]);
 
+  const handleShowMenuAuth = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
   const handleNotifyOpen = () => {
     setNotifyOpen(true);
   };
 
-  const handleProfileMenuOpen = (event) => {
-    setOpenMenuAuth(true);
-  };
-
   const handleMenuClose = () => {
-    setOpenMenuAuth(false);
+    setAnchorEl(null);
   };
 
   const handleLogout = () => {
@@ -130,10 +133,11 @@ function Header(props) {
                 </IconButton>
                 <IconButton
                   size="large"
-                  edge="end"
                   aria-label="account of current user"
+                  aria-controls={open ? "menuAuth" : undefined}
                   aria-haspopup="true"
-                  onClick={handleProfileMenuOpen}
+                  aria-expanded={open ? "true" : undefined}
+                  onClick={handleShowMenuAuth}
                   color="inherit"
                 >
                   <AccountCircle fontSize="large" />
@@ -166,8 +170,10 @@ function Header(props) {
         </Toolbar>
       </AppBar>
       <CustomDropdown
-        isOpenMenu={isOpenMenuAuth}
-        setIsOpenMenu={setOpenMenuAuth}
+        id="menuAuth"
+        open={open}
+        anchorEl={anchorEl}
+        setAnchorEl={setAnchorEl}
         listItem={listMenu}
       />
       <RenderNotify

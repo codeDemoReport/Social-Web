@@ -6,12 +6,12 @@ import Login from "./pages/Login";
 import Post from "./pages/Post";
 import history from "./utils/history";
 import Register from "./pages/Register";
-import VerifyEmail from "./components/VerifyEmai";
+import VerifyEmail from "./components/VerifyEmail";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { checkToken } from "./redux/action";
 import BackdropSimple from "./components/BackdropSimple";
-import PrivateRouter from "./customRouter/PrivateRouter";
+import PrivateRouter from "./Layouts/PrivateRouter";
 
 function App() {
   const dispatch = useDispatch();
@@ -31,7 +31,7 @@ function App() {
           <Route path="/login" component={Login} exact />
           <PrivateRouter path="/post" component={Post} exact />
           <Route path={"/register"} component={Register} />
-          <Route path="/verify-email" component={VerifyEmail}/>
+          <Route path="/verify-email" component={VerifyEmail} />
         </Switch>
       </Router>
       <ToastContainer />

@@ -9,7 +9,7 @@ function PrivateRouter(props) {
         let Component = props.component;
         const token = localStorage.getItem("token");
         if (token) return <Component />;
-        return <Redirect to="/" />;
+        return <Redirect to="/login" />;
       }}
     />
   );

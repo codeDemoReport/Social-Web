@@ -1,7 +1,7 @@
 import { Menu, MenuItem } from "@mui/material";
 import React from "react";
 
-function CustomDropdown({ isOpenMenu, setIsOpenMenu, listItem }) {
+function CustomDropdown({ id, open, anchorEl, setAnchorEl, listItem }) {
   return (
     <Menu
       sx={{ marginTop: "50px" }}
@@ -14,8 +14,10 @@ function CustomDropdown({ isOpenMenu, setIsOpenMenu, listItem }) {
         vertical: "top",
         horizontal: "right",
       }}
-      open={isOpenMenu}
-      onClose={() => setIsOpenMenu(false)}
+      id={id}
+      open={open}
+      anchorEl={anchorEl}
+      onClose={() => setAnchorEl(null)}
     >
       {listItem.map((element, index) => (
         <MenuItem key={index} onClick={element.event}>

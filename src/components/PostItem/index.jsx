@@ -13,13 +13,12 @@ import {
   CardMedia,
   Divider,
   IconButton,
-  Menu,
-  MenuItem,
   TextField,
   Typography,
 } from "@mui/material";
 import { red } from "@mui/material/colors";
 import React, { useState } from "react";
+import CustomDropdown from "../CustomDropdown";
 import formatDateTime from "./../../utils/dateTime";
 import "./style.scss";
 
@@ -29,11 +28,8 @@ function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
-  const handleClick = (event) => {
+  const handleShowDropdown = (event) => {
     setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
   };
 
   const handleClickEdit = () => {
@@ -55,27 +51,16 @@ function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
     });
   };
 
-  const renderDropdown = (
-    <Menu
-      sx={{ marginTop: "50px" }}
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      id="dropdown"
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={open}
-      onClose={handleClose}
-    >
-      <MenuItem onClick={handleClickEdit}>Sửa bài viết</MenuItem>
-      <MenuItem onClick={handleClickDelete}>Xóa bài viết</MenuItem>
-    </Menu>
-  );
+  const dataDropdown = [
+    {
+      title: "Sửa bài viết",
+      event: handleClickEdit,
+    },
+    {
+      title: "Xóa bài viết",
+      event: handleClickDelete,
+    },
+  ];
 
   return (
     <section className="postItem">
@@ -96,7 +81,7 @@ function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
               aria-controls={open ? "dropdown" : undefined}
               aria-haspopup="true"
               aria-expanded={open ? "true" : undefined}
-              onClick={handleClick}
+              onClick={handleShowDropdown}
             >
               <MoreVertIcon />
             </IconButton>
@@ -188,7 +173,13 @@ function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
           </Box>
         </CardActions>
       </Card>
-      {renderDropdown}
+      <CustomDropdown
+        id="dropdown"
+        open={open}
+        anchorEl={anchorEl}
+        setAnchorEl={setAnchorEl}
+        listItem={dataDropdown}
+      />
     </section>
   );
 }

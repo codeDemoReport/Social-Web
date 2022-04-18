@@ -13,13 +13,13 @@ function Post(props) {
   const [temp, setTemp] = useState({});
 
   const dispatch = useDispatch();
-  const { postList, dataCreate, dataDelete } = useSelector(
+  const { postList, dataCreate, dataDelete, dataEdit } = useSelector(
     (state) => state.reducer
   );
 
   useEffect(() => {
     dispatch(getListPost());
-  }, [dataCreate, dataDelete, dispatch]);
+  }, [dataCreate, dataDelete, dataEdit, dispatch]);
 
   const handleDelete = () => {
     dispatch(
