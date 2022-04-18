@@ -11,6 +11,16 @@ import { toastError, toastSuccess } from "../../utils/toast";
 
 const url = "http://192.168.68.51:3000/api";
 
+export const createComment = (data, token) => async (dispatch) => {
+  try {
+     const headers = { authorization: `Bearer ${token}` };
+    const res = await axios.post(`${url}/comment`, { content: data.content, postId: data.id}, { headers })
+    console.log(res)
+  } catch (error) {
+    
+  }
+}
+
 export const login = (params) => async (dispatch) => {
   const { checkRemember } = params;
   try {
@@ -141,3 +151,5 @@ export const createPost = (params) => async (dispatch) => {
     if (error.response.data.status === 456) dispatch(logout());
   }
 };
+
+

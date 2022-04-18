@@ -19,6 +19,39 @@ import {
   Button,
 } from "@mui/material";
 
+const listNotify = [
+  {
+    fullName: "Tran Van Luc",
+    content: "created post",
+    isRead: false,
+  },
+  {
+    fullName: "Truong Thanh Tin",
+    content: "updated post",
+    isRead: false,
+  },
+  {
+    fullName: "Tran Dinh Sang",
+    content: "deleted post",
+    isRead: true,
+  },
+  {
+    fullName: "Tran Quang Thin",
+    content: "created post",
+    isRead: false,
+  },
+  {
+    fullName: "Tran Quang Thin",
+    content: "created post",
+    isRead: false,
+  },
+  {
+    fullName: "Tran Quang Thin",
+    content: "created post",
+    isRead: false,
+  },
+];
+
 function Header(props) {
   const [isOpenMenuAuth, setOpenMenuAuth] = useState(false);
   const [isNotifyOpen, setNotifyOpen] = useState(false);
@@ -173,7 +206,7 @@ function Header(props) {
       <RenderNotify
         isNotifyOpen={isNotifyOpen}
         setIsNotifyOpen={setNotifyOpen}
-        listNotify={[]}
+        listNotify={listNotify}
       />
     </Box>
   );

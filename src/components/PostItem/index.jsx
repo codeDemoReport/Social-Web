@@ -22,12 +22,15 @@ import { red } from "@mui/material/colors";
 import React, { useState } from "react";
 import "./style.scss";
 import formatDateTime from "./../../utils/dateTime";
+import { useDispatch } from "react-redux";
+import { createComment } from "../../redux/action";
 
 function PostItem({ post }) {
   const [valueComment, setValueComment] = useState("");
   const [like, setLike] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const dispatch = useDispatch();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -43,10 +46,8 @@ function PostItem({ post }) {
   };
 
   const handleClickBtnComment = () => {
-    console.log({
-      id: post.userId._id,
-      valueComment,
-    });
+    const token = localStorage.getItem("token");
+    dispatch(createComment({ content: valueComment, id: post._id }, token));
   };
 
   const renderDropdown = (
