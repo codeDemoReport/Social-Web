@@ -27,6 +27,9 @@ import {
   Button,
 } from "@mui/material";
 
+import DeleteIcon from "@mui/icons-material/Delete";
+import ClearAllIcon from "@mui/icons-material/ClearAll";
+
 function Header(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [isNotifyOpen, setNotifyOpen] = useState(false);
@@ -78,8 +81,29 @@ function Header(props) {
     >
       <Box style={{ width: 300, height: 400 }}>
         <Paper variant="outlined">
+          <IconButton style={{ fontSize: 13 }}>
+            <ClearAllIcon style={{ marginRight: "5px" }} />
+            Delete All
+          </IconButton>
+          <Divider />
           <nav>
             <List>
+              <ListItem>
+                <ListItemButton style={{ padding: "0px", margin: "0px" }}>
+                  <ListItemAvatar>
+                    <Avatar />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={data.fullName}
+                    secondary={"has created a post"}
+                  />
+                </ListItemButton>
+                <Badge color="primary" variant="dot"></Badge>
+                <IconButton>
+                  <DeleteIcon />
+                </IconButton>
+              </ListItem>
+              <Divider />
               <ListItem>
                 <ListItemButton>
                   <ListItemAvatar>
@@ -125,12 +149,10 @@ function Header(props) {
   const renderMenu = (
     <Menu
       sx={{ marginTop: "50px" }}
-      anchorEl={anchorEl}
       anchorOrigin={{
         vertical: "top",
         horizontal: "right",
       }}
-      id={menuId}
       keepMounted
       transformOrigin={{
         vertical: "top",

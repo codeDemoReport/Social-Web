@@ -96,6 +96,6 @@ export const checkToken = (token) => async (dispatch) => {
       payload: res.data.user
     })
   } catch (error) {
-    toastError("Please login now!");
+    // toastError("Please login now!");
   }
 }
