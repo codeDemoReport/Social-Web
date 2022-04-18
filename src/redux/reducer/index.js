@@ -4,6 +4,7 @@ import {
   EMAIL_VERIFY,
   GET_LIST_POST,
   LOADING,
+  CREATE_POST,
 } from "../../utils/constant";
 
 const initialState = {
@@ -11,6 +12,7 @@ const initialState = {
   emailVerify: "",
   postList: [],
   loading: false,
+  dataCreate: {},
 };
 
 function reducer(state = initialState, action) {
@@ -25,6 +27,12 @@ function reducer(state = initialState, action) {
       return {
         ...state,
         postList: [...action.payload],
+      };
+    }
+    case CREATE_POST: {
+      return {
+        ...state,
+        dataCreate: { ...action.payload },
       };
     }
     case EMAIL_VERIFY: {

@@ -4,6 +4,7 @@ import {
   GET_LIST_POST,
   LOGIN,
   LOADING,
+  CREATE_POST,
 } from "../../utils/constant";
 import history from "../../utils/history";
 import { toastError, toastSuccess } from "../../utils/toast";
@@ -111,7 +112,7 @@ export const getListPost = (params) => async (dispatch) => {
 
     dispatch({
       type: GET_LIST_POST,
-      payload: response.data,
+      payload: response.data.data,
     });
   } catch (error) {
     toastError(error.response.data.error);
@@ -128,6 +129,11 @@ export const createPost = (params) => async (dispatch) => {
       { ...params },
       { headers }
     );
+
+    dispatch({
+      type: CREATE_POST,
+      payload: response.data,
+    });
 
     if (response.data.success) toastSuccess(response.data.success);
   } catch (error) {
