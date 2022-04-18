@@ -34,6 +34,7 @@ function DialogAddOrEdit({ open, setOpen }) {
         userId: infoUser.userId,
       })
     );
+    setOpen(false);
   };
 
   return (
