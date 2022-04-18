@@ -13,36 +13,38 @@ import {
   CardMedia,
   Divider,
   IconButton,
-  Menu,
-  MenuItem,
   TextField,
   Typography,
 } from "@mui/material";
 import { red } from "@mui/material/colors";
 import React, { useState } from "react";
-import "./style.scss";
+import CustomDropdown from "../CustomDropdown";
 import formatDateTime from "./../../utils/dateTime";
 import { useDispatch } from "react-redux";
 import { createComment } from "../../redux/action";
+import "./style.scss";
 
-function PostItem({ post }) {
+function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
   const [valueComment, setValueComment] = useState("");
   const [like, setLike] = useState(false);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const dispatch = useDispatch();
 
-  const handleClick = (event) => {
+  const handleShowDropdown = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
+
+  const handleClickEdit = () => {
+    setTemp(post);
     setAnchorEl(null);
+    setOpenAddOrEdit(true);
   };
 
-  const handleClickEdit = () => {};
-
   const handleClickDelete = () => {
+    setTemp(post);
     setAnchorEl(null);
+    setOpenDelete(true);
   };
 
   const handleClickBtnComment = () => {
@@ -50,27 +52,16 @@ function PostItem({ post }) {
     dispatch(createComment({ content: valueComment, id: post._id }, token));
   };
 
-  const renderDropdown = (
-    <Menu
-      sx={{ marginTop: "50px" }}
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      id="dropdown"
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={open}
-      onClose={handleClose}
-    >
-      <MenuItem onClick={handleClose}>Sửa bài viết</MenuItem>
-      <MenuItem onClick={handleClickDelete}>Xóa bài viết</MenuItem>
-    </Menu>
-  );
+  const dataDropdown = [
+    {
+      title: "Sửa bài viết",
+      event: handleClickEdit,
+    },
+    {
+      title: "Xóa bài viết",
+      event: handleClickDelete,
+    },
+  ];
 
   return (
     <section className="postItem">
@@ -91,7 +82,7 @@ function PostItem({ post }) {
               aria-controls={open ? "dropdown" : undefined}
               aria-haspopup="true"
               aria-expanded={open ? "true" : undefined}
-              onClick={handleClick}
+              onClick={handleShowDropdown}
             >
               <MoreVertIcon />
             </IconButton>
@@ -183,7 +174,13 @@ function PostItem({ post }) {
           </Box>
         </CardActions>
       </Card>
-      {renderDropdown}
+      <CustomDropdown
+        id="dropdown"
+        open={open}
+        anchorEl={anchorEl}
+        setAnchorEl={setAnchorEl}
+        listItem={dataDropdown}
+      />
     </section>
   );
 }
