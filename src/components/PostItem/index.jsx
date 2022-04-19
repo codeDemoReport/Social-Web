@@ -25,6 +25,7 @@ import "./style.scss";
 function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
   const [valueComment, setValueComment] = useState("");
   const [like, setLike] = useState(false);
+
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
