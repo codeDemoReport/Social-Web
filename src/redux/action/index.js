@@ -225,7 +225,15 @@ export const editPost = (params) => async (dispatch) => {
 export const createComment = (data, token) => async (dispatch) => {
   try {
      const headers = { authorization: `Bearer ${token}` };
-    await axios.post(`${url}/comment`, { content: data.content, postId: data.id}, { headers })
+    await axios.post(`${url}/comment`, { content: data.content, postId: data.postId }, { headers })
+    
+//create Notify
+    const notify = {
+      toUserId: data.toUserId,
+      content: "commented your post",
+      postId: data.postId
+    }
+    dispatch(createNotify(notify, token))
     toastSuccess("Comment Success")
   } catch (error) {
     toastError("Comment Fail")
@@ -241,4 +249,25 @@ export const deleteComment = (id, token) => async (dispatch) => {
     toastError("Delete Fail")
   }
 }
+
+export const createNotify = (data, token) => async (dispatch) => {
+  try {
+    const headers = { authorization: `Bearer ${token}` };
+    const res = await axios.post(`${url}/notification`, { ...data }, { headers })
+    console.log(res)
+  } catch (error) {
+    console.log(error.response)
+  }
+}
+
+// export const getNotify = () => async (dispatch) => {
+//   try {
+//     const token = localStorage.getItem("token")
+//     const headers = { authorization: `Bearer ${token}` };
+//     const res = await axios.get(`${url}/notification`, { headers })
+
+//   } catch (error) {
+    
+//   }
+// }
 

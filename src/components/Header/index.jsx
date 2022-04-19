@@ -19,42 +19,10 @@ import {
   Button,
 } from "@mui/material";
 
-const listNotify = [
-  {
-    fullName: "Tran Van Luc",
-    content: "created post",
-    isRead: false,
-  },
-  {
-    fullName: "Truong Thanh Tin",
-    content: "updated post",
-    isRead: false,
-  },
-  {
-    fullName: "Tran Dinh Sang",
-    content: "deleted post",
-    isRead: true,
-  },
-  {
-    fullName: "Tran Quang Thin",
-    content: "created post",
-    isRead: false,
-  },
-  {
-    fullName: "Tran Quang Thin",
-    content: "created post",
-    isRead: false,
-  },
-  {
-    fullName: "Tran Quang Thin",
-    content: "created post",
-    isRead: false,
-  },
-];
-
 function Header(props) {
   const [isNotifyOpen, setNotifyOpen] = useState(null);
   const openNotify = Boolean(isNotifyOpen);
+  const [totalNotify, setTotal] = useState(0);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -165,7 +133,7 @@ function Header(props) {
                   onClick={handleNotifyOpen}
                   id="menu-notify"
                 >
-                  <Badge badgeContent={17} color="error">
+                  <Badge badgeContent={totalNotify} color="error">
                     <NotificationsIcon fontSize="large" />
                   </Badge>
                 </IconButton>
@@ -219,7 +187,7 @@ function Header(props) {
         open={openNotify}
         anchorEl={isNotifyOpen}
         setAnchorEl={setNotifyOpen}
-        listNotify={listNotify}
+        setTotal={setTotal}
       />
     </Box>
   );
