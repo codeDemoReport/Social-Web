@@ -31,7 +31,7 @@ function RenderNotify({ isNotifyOpen, setIsNotifyOpen, listNotify }) {
         horizontal: "right",
       }}
       open={isNotifyOpen}
-      onClick={() => setIsNotifyOpen(!isNotifyOpen)}
+      onClose={() => setIsNotifyOpen(!isNotifyOpen)}
     >
       <Box style={{ width: 300, height: 400 }}>
         <Paper variant="outlined">
@@ -42,57 +42,27 @@ function RenderNotify({ isNotifyOpen, setIsNotifyOpen, listNotify }) {
           <Divider />
           <nav>
             <List>
-              <ListItem>
-                <ListItemButton style={{ padding: "0px", margin: "0px" }}>
-                  <ListItemAvatar>
-                    <Avatar />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={"Tran Van Luc"}
-                    secondary={"has created a post"}
-                  />
-                </ListItemButton>
-                <Badge color="primary" variant="dot"></Badge>
-                <IconButton>
-                  <DeleteIcon />
-                </IconButton>
-              </ListItem>
-              <Divider />
-              <ListItem>
-                <ListItemButton>
-                  <ListItemAvatar>
-                    <Avatar />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={"Tran Van Luc"}
-                    secondary={"has created a post"}
-                  />
-                </ListItemButton>
-              </ListItem>
-              <Divider />
-              <ListItem>
-                <ListItemButton>
-                  <ListItemAvatar>
-                    <Avatar />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={"Tran Van Luc"}
-                    secondary={"has created a post"}
-                  />
-                </ListItemButton>
-              </ListItem>
-              <Divider />
-              <ListItem>
-                <ListItemButton>
-                  <ListItemAvatar>
-                    <Avatar />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={"Tran Van Luc"}
-                    secondary={"has created a post"}
-                  />
-                </ListItemButton>
-              </ListItem>
+              {listNotify.map((element, index) => (
+                <>
+                  <ListItem>
+                    <ListItemButton style={{ padding: "0px", margin: "0px" }}>
+                      <ListItemAvatar>
+                        <Avatar />
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={element.fullName}
+                        secondary={element.content}
+                      />
+                    </ListItemButton>
+                    {!element.isRead && <Badge color="primary" variant="dot" />}
+
+                    <IconButton>
+                      <DeleteIcon />
+                    </IconButton>
+                  </ListItem>
+                  <Divider />
+                </>
+              ))}
             </List>
           </nav>
         </Paper>
