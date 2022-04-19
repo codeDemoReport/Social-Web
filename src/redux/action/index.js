@@ -13,8 +13,6 @@ import { toastError, toastSuccess } from "../../utils/toast";
 
 const url = "http://192.168.68.51:3000/api";
 
-
-
 export const login = (params) => async (dispatch) => {
   const { checkRemember } = params;
 
@@ -222,23 +220,28 @@ export const editPost = (params) => async (dispatch) => {
   }
 };
 
-export const createComment = (data, token) => async (dispatch) => {
+export const createComment = (params) => async (dispatch) => {
   try {
-     const headers = { authorization: `Bearer ${token}` };
-    await axios.post(`${url}/comment`, { content: data.content, postId: data.id}, { headers })
-    toastSuccess("Comment Success")
-  } catch (error) {
-    toastError("Comment Fail")
-  }
-}
-
-export const deleteComment = (id, token) => async (dispatch) => {
-  try {
+    const token = localStorage.getItem("token");
     const headers = { authorization: `Bearer ${token}` };
-    await axios.delete(`${url}/comment/${id}`, { headers })
+
+    await axios.post(`${url}/comment`, { ...params }, { headers });
+    toastSuccess("Comment Success");
+  } catch (error) {
+    toastError("Comment Fail");
+  }
+};
+
+export const deleteComment = (params) => async (dispatch) => {
+  const { id } = params;
+
+  try {
+    const token = localStorage.getItem("token");
+    const headers = { authorization: `Bearer ${token}` };
+
+    await axios.delete(`${url}/comment/${id}`, { headers });
     toastSuccess("Delete success");
   } catch (error) {
-    toastError("Delete Fail")
+    toastError("Delete Fail");
   }
-}
-
+};

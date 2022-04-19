@@ -29,13 +29,14 @@ function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
   const [valueComment, setValueComment] = useState("");
   const [comments, setComments] = useState([]);
   const [like, setLike] = useState(false);
+  const [commentSelected, setCommentSelected] = useState("");
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+
   const [openEventComment, setEventComment] = useState(null);
   const openComment = Boolean(openEventComment);
-  const [commentSelected, setCommentSelected] = useState("");
-  const token = localStorage.getItem("token");
+
   const dispatch = useDispatch();
 
   const handleShowDropdown = (event) => {
@@ -59,9 +60,7 @@ function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
   };
 
   const handleClickBtnComment = async () => {
-    await dispatch(
-      createComment({ content: valueComment, id: post._id }, token)
-    );
+    await dispatch(createComment({ content: valueComment, postId: post._id }));
     await fetchData();
   };
 
@@ -77,13 +76,14 @@ function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
   ];
 
   const handleDeleteComment = async () => {
-    await dispatch(deleteComment(commentSelected, token));
+    await dispatch(deleteComment({ id: commentSelected }));
     fetchData();
     setEventComment(null);
   };
 
   const fetchData = async () => {
     try {
+      const token = localStorage.getItem("token");
       const headers = { authorization: `Bearer ${token}` };
       const res = await axios.get(
         `http://192.168.68.51:3000/api/comment/${post._id}`,
@@ -94,6 +94,7 @@ function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
       setComments(res.data.data);
     } catch (error) {}
   };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -102,6 +103,7 @@ function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
     { title: "Xóa comment", event: handleDeleteComment },
     { title: "Sửa comment", event: null },
   ];
+
   return (
     <section className="postItem">
       <Card className="postItem__card">
@@ -228,13 +230,14 @@ function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
                 value={valueComment}
                 onChange={(e) => setValueComment(e.target.value)}
               />
-              <Button
-                className="postItem__icon"
-                disabled={!valueComment}
-                onClick={handleClickBtnComment}
-              >
-                <SendIcon />
-              </Button>
+              <Box className="postItem__icon">
+                <Button
+                  disabled={!valueComment}
+                  onClick={handleClickBtnComment}
+                >
+                  <SendIcon />
+                </Button>
+              </Box>
             </Box>
           </Box>
         </CardActions>
