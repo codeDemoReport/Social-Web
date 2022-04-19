@@ -1,12 +1,12 @@
 import { combineReducers } from "redux";
 import {
-  LOGIN,
-  EMAIL_VERIFY,
-  GET_LIST_POST,
-  LOADING,
   CREATE_POST,
   DELETE_POST,
   EDIT_POST,
+  EMAIL_VERIFY,
+  GET_LIST_POST,
+  LOADING,
+  LOGIN,
 } from "../../utils/constant";
 
 const initialState = {

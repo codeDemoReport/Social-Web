@@ -4,18 +4,16 @@ import { Box } from "@mui/system";
 import { Form, Formik } from "formik";
 import React from "react";
 import { useDispatch } from "react-redux";
-
 import * as Yup from "yup";
 import Copyright from "../../components/Copyright";
 import CustomField from "../../components/CustomField";
 import { register } from "../../redux/action";
-
 import { registerField } from "../../utils/constant";
-
 import "./style.scss";
 
 function Register(props) {
   const dispatch = useDispatch();
+
   const initialValues = {
     fullName: "",
     email: "",
