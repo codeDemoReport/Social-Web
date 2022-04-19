@@ -29,6 +29,7 @@ function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
   const [valueComment, setValueComment] = useState("");
   const [comments, setComments] = useState([]);
   const [like, setLike] = useState(false);
+
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [openEventComment, setEventComment] = useState(null);

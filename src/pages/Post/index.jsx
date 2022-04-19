@@ -1,8 +1,15 @@
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import DialogAddOrEdit from "../../components/DialogAddOrEdit";
 import PostStatus from "../../components/PostStatus";
-import DialogDelete from "./../../components/DialogDelete";
 import PostItem from "./../../components/PostItem";
 import { deletePost, getListPost } from "./../../redux/action";
 import "./style.scss";
@@ -20,6 +27,11 @@ function Post(props) {
   useEffect(() => {
     dispatch(getListPost());
   }, [dataCreate, dataDelete, dataEdit, dispatch]);
+
+  const handleCloseDelete = () => {
+    setOpenDelete(false);
+    setTemp({});
+  };
 
   const handleDelete = () => {
     dispatch(
@@ -48,13 +60,27 @@ function Post(props) {
         temp={temp}
         setTemp={setTemp}
       />
-      <DialogDelete
-        open={openDelete}
-        setOpen={setOpenDelete}
-        temp={temp}
-        setTemp={setTemp}
-        handleClickBtnOK={handleDelete}
-      />
+      <div>
+        <Dialog
+          open={openDelete}
+          onClose={handleCloseDelete}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">Confirm</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Do you want to delete the post #{temp.content}?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleDelete}>OK</Button>
+            <Button onClick={handleCloseDelete} autoFocus>
+              Cancel
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
     </section>
   );
 }

@@ -2,11 +2,11 @@ import { Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { Box } from "@mui/system";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import { createPost, editPost } from "../../redux/action";
 import CustomField from "../CustomField";
 import "./style.scss";
-import { useDispatch, useSelector } from "react-redux";
 
 function DialogAddOrEdit({ open, setOpen, temp, setTemp }) {
   const [image, setImage] = useState("");
@@ -34,14 +34,14 @@ function DialogAddOrEdit({ open, setOpen, temp, setTemp }) {
         editPost({
           ...values,
           id: temp._id,
-          photo: image ? URL.createObjectURL(image) : temp.photo,
+          photo: image ? image : temp.photo,
         })
       );
     } else {
       dispatch(
         createPost({
           ...values,
-          photo: image ? URL.createObjectURL(image) : "",
+          photo: image ? image : "",
           userId: infoUser.userId,
         })
       );

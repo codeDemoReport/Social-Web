@@ -1,12 +1,12 @@
 import axios from "axios";
 import {
-  EMAIL_VERIFY,
-  GET_LIST_POST,
-  LOGIN,
-  LOADING,
   CREATE_POST,
   DELETE_POST,
   EDIT_POST,
+  EMAIL_VERIFY,
+  GET_LIST_POST,
+  LOADING,
+  LOGIN,
 } from "../../utils/constant";
 import history from "../../utils/history";
 import { toastError, toastSuccess } from "../../utils/toast";
@@ -17,11 +17,13 @@ const url = "http://192.168.68.51:3000/api";
 
 export const login = (params) => async (dispatch) => {
   const { checkRemember } = params;
+
   try {
     dispatch({
       type: LOADING,
       payload: true,
     });
+
     const response = await axios.post(`${url}/auth/login`, { ...params });
 
     dispatch({
@@ -46,7 +48,7 @@ export const login = (params) => async (dispatch) => {
       payload: false,
     });
     toastSuccess(response.data.msg);
-    history.push("/");
+    history.push("/post");
   } catch (error) {
     toastError(error.response.data.msg);
     dispatch({
@@ -100,6 +102,7 @@ export const checkToken = (token) => async (dispatch) => {
   try {
     const headers = { authorization: `Bearer ${token}` };
     const res = await axios.get(`${url}/user/token/info`, { headers });
+
     dispatch({
       type: LOGIN,
       payload: res.data.user,
@@ -107,6 +110,27 @@ export const checkToken = (token) => async (dispatch) => {
   } catch (error) {
     // toastError("Please login now!");
   }
+};
+
+export const imageUpload = async (image) => {
+  const formData = new FormData();
+
+  formData.append("file", image);
+
+  formData.append("upload_preset", "efxjficn");
+  formData.append("cloud_name", "devat-channel");
+
+  const res = await fetch(
+    "https://api.cloudinary.com/v1_1/devat-channel/upload",
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
+
+  const data = await res.json();
+
+  return data.url;
 };
 
 export const getListPost = (params) => async (dispatch) => {
@@ -128,10 +152,14 @@ export const getListPost = (params) => async (dispatch) => {
 export const createPost = (params) => async (dispatch) => {
   const token = localStorage.getItem("token");
   const headers = { authorization: `Bearer ${token}` };
+
+  const { photo } = params;
+  const imageUpdated = await imageUpload(photo);
+
   try {
     const response = await axios.post(
       `${url}/post`,
-      { ...params },
+      { ...params, photo: imageUpdated },
       { headers }
     );
 
@@ -150,7 +178,9 @@ export const createPost = (params) => async (dispatch) => {
 export const deletePost = (params) => async (dispatch) => {
   const token = localStorage.getItem("token");
   const headers = { authorization: `Bearer ${token}` };
+
   const { id } = params;
+
   try {
     const response = await axios.delete(`${url}/post/${id}`, { headers });
 
@@ -169,11 +199,14 @@ export const deletePost = (params) => async (dispatch) => {
 export const editPost = (params) => async (dispatch) => {
   const token = localStorage.getItem("token");
   const headers = { authorization: `Bearer ${token}` };
-  const { id } = params;
+
+  const { id, photo } = params;
+  const imageUpdated = await imageUpload(photo);
+
   try {
     const response = await axios.put(
       `${url}/post/${id}`,
-      { ...params },
+      { ...params, photo: imageUpdated },
       { headers }
     );
 
