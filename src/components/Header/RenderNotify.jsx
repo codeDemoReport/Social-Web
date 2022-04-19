@@ -15,32 +15,19 @@ import { Box } from "@mui/system";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import ClearAllIcon from "@mui/icons-material/ClearAll";
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
+import { useDispatch } from "react-redux";
+import { deleteAllNotify, deleteNotify } from "../../redux/action";
 
-function RenderNotify({ id, open, anchorEl, setAnchorEl, setTotal }) {
-  const [notifies, setNotifies] = useState([]);
-
-  const fetchData = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const headers = { authorization: `Bearer ${token}` };
-      const res = await axios.get(
-        `http://192.168.68.51:3000/api/notification`,
-        {
-          headers,
-        }
-      );
-      setNotifies(res.data.data);
-      setTotal(res.data.data.length);
-    } catch (error) {
-      console.log(error.response);
-    }
+function RenderNotify({ id, open, anchorEl, setAnchorEl, notifies }) {
+  const dispatch = useDispatch();
+  const handleDeleteNotify = (id) => {
+    dispatch(deleteNotify(id));
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const handleDeleteAllNotify = () => {
+    dispatch(deleteAllNotify());
+  };
 
   return (
     <Menu
@@ -61,7 +48,7 @@ function RenderNotify({ id, open, anchorEl, setAnchorEl, setTotal }) {
     >
       <Box style={{ width: 300, height: 400 }}>
         <Paper variant="outlined">
-          <IconButton style={{ fontSize: 13 }}>
+          <IconButton style={{ fontSize: 13 }} onClick={handleDeleteAllNotify}>
             <ClearAllIcon style={{ marginRight: "5px" }} />
             Delete All
           </IconButton>
@@ -82,7 +69,7 @@ function RenderNotify({ id, open, anchorEl, setAnchorEl, setTotal }) {
                     </ListItemButton>
                     {!element.isRead && <Badge color="primary" variant="dot" />}
 
-                    <IconButton>
+                    <IconButton onClick={() => handleDeleteNotify(element._id)}>
                       <DeleteIcon />
                     </IconButton>
                   </ListItem>

@@ -7,6 +7,7 @@ import {
   GET_LIST_POST,
   LOADING,
   LOGIN,
+  NOTIFIES,
 } from "../../utils/constant";
 import history from "../../utils/history";
 import { toastError, toastSuccess } from "../../utils/toast";
@@ -266,4 +267,44 @@ export const createNotify = (data, token) => async (dispatch) => {
   } catch (error) {
     console.log(error.response);
   }
-};
+}
+
+export const getNotify = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("token")
+    const headers = { authorization: `Bearer ${token}` };
+    const res = await axios.get(`${url}/notification`, { headers })
+    dispatch({
+      type: NOTIFIES,
+      payload: [...res.data.data] 
+    })
+  } catch (error) {
+    
+  }
+}
+
+export const deleteNotify = (id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("token")
+    const headers = { authorization: `Bearer ${token}` };
+    const res = await axios.delete(`${url}/notification/${id}`, { headers })
+    toastSuccess(res.data.msg)
+    dispatch(getNotify())
+  } catch (error) {
+    console.log(error.response)
+  }
+}
+
+export const deleteAllNotify = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("token")
+    const headers = { authorization: `Bearer ${token}` };
+    const res = await axios.delete(`${url}/notification`, { headers })
+    toastSuccess(res.data.msg)
+    dispatch(getNotify())
+  } catch (error) {
+    console.log(error.response)
+  }
+}
+
+
