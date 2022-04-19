@@ -12,6 +12,8 @@ export const EMAIL_VERIFY = "EMAIL_VERIFY";
 
 export const LOADING = "LOADING";
 
+export const NOTIFIES = "NOTIFIES";
+
 export const registerField = [
   {
     id: 1,

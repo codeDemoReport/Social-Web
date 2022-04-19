@@ -8,18 +8,26 @@ import history from "./utils/history";
 import Register from "./pages/Register";
 import VerifyEmail from "./components/VerifyEmail";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { checkToken } from "./redux/action";
+import { useDispatch, useSelector } from "react-redux";
+import { checkToken, getNotify } from "./redux/action";
 import BackdropSimple from "./components/BackdropSimple";
 import PrivateRouter from "./Layouts/PrivateRouter";
 
 function App() {
   const dispatch = useDispatch();
+  const {reducer} = useSelector(state=>state)
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) dispatch(checkToken(token));
+     const token = localStorage.getItem("token");
+    if (token) {
+      dispatch(checkToken(token));
+    }
   }, [dispatch]);
+
+  useEffect(() => {
+    if (reducer.infoUser)
+      dispatch(getNotify())
+  }, [reducer.infoUser])
 
   return (
     <div className="App">

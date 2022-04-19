@@ -7,6 +7,7 @@ import {
   GET_LIST_POST,
   LOADING,
   LOGIN,
+  NOTIFIES,
 } from "../../utils/constant";
 
 const initialState = {
@@ -17,6 +18,7 @@ const initialState = {
   dataCreate: {},
   dataDelete: {},
   dataEdit: {},
+  notifies: [],
 };
 
 function reducer(state = initialState, action) {
@@ -61,6 +63,12 @@ function reducer(state = initialState, action) {
       return {
         ...state,
         loading: action.payload,
+      };
+    }
+    case NOTIFIES: {
+      return {
+        ...state,
+        notifies: [...action.payload],
       };
     }
     default:

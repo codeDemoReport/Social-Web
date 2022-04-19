@@ -22,7 +22,7 @@ import {
 function Header(props) {
   const [isNotifyOpen, setNotifyOpen] = useState(null);
   const openNotify = Boolean(isNotifyOpen);
-  const [totalNotify, setTotal] = useState(0);
+  const [totalNotRead, setTotalNotRead] = useState(0);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -34,6 +34,15 @@ function Header(props) {
   useEffect(() => {
     if (reducer.infoUser) setData(reducer.infoUser);
   }, [reducer.infoUser, dispatch]);
+
+  useEffect(() => {
+    if (reducer.notifies) {
+      const newArr = reducer.notifies.filter(
+        (element) => element.isRead === false
+      );
+      setTotalNotRead(newArr.length);
+    }
+  }, [reducer.notifies]);
 
   const handleShowMenuAuth = (event) => {
     setAnchorEl(event.currentTarget);
@@ -133,7 +142,7 @@ function Header(props) {
                   onClick={handleNotifyOpen}
                   id="menu-notify"
                 >
-                  <Badge badgeContent={totalNotify} color="error">
+                  <Badge badgeContent={totalNotRead} color="error">
                     <NotificationsIcon fontSize="large" />
                   </Badge>
                 </IconButton>
@@ -187,7 +196,7 @@ function Header(props) {
         open={openNotify}
         anchorEl={isNotifyOpen}
         setAnchorEl={setNotifyOpen}
-        setTotal={setTotal}
+        notifies={reducer.notifies}
       />
     </Box>
   );
