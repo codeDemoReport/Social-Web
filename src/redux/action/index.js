@@ -235,12 +235,10 @@ export const createComment = (data, token) => async (dispatch) => {
 export const deleteComment = (id, token) => async (dispatch) => {
   try {
     const headers = { authorization: `Bearer ${token}` };
-    const res = await axios.delete(`${url}/comment/${id}`, { headers })
-    console.log(res)
+    await axios.delete(`${url}/comment/${id}`, { headers })
     toastSuccess("Delete success");
   } catch (error) {
     toastError("Delete Fail")
-    console.log(error)
   }
 }
 
