@@ -53,7 +53,8 @@ const listNotify = [
 ];
 
 function Header(props) {
-  const [isNotifyOpen, setNotifyOpen] = useState(false);
+  const [isNotifyOpen, setNotifyOpen] = useState(null);
+  const openNotify = Boolean(isNotifyOpen);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -70,8 +71,8 @@ function Header(props) {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleNotifyOpen = () => {
-    setNotifyOpen(true);
+  const handleNotifyOpen = (event) => {
+    setNotifyOpen(event.currentTarget);
   };
 
   const handleMenuClose = () => {
@@ -158,7 +159,11 @@ function Header(props) {
                   size="large"
                   aria-label="show 17 new notifications"
                   color="inherit"
+                  aria-controls={openNotify ? "menu-notify" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={openNotify ? "true" : undefined}
                   onClick={handleNotifyOpen}
+                  id="menu-notify"
                 >
                   <Badge badgeContent={17} color="error">
                     <NotificationsIcon fontSize="large" />
@@ -210,8 +215,10 @@ function Header(props) {
         listItem={listMenu}
       />
       <RenderNotify
-        isNotifyOpen={isNotifyOpen}
-        setIsNotifyOpen={setNotifyOpen}
+        id="menu-notify"
+        open={openNotify}
+        anchorEl={isNotifyOpen}
+        setAnchorEl={setNotifyOpen}
         listNotify={listNotify}
       />
     </Box>

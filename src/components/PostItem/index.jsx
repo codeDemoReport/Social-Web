@@ -2,6 +2,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import SendIcon from "@mui/icons-material/Send";
 import ShareIcon from "@mui/icons-material/Share";
+import axios from "axios";
 import {
   Avatar,
   Box,
@@ -17,22 +18,31 @@ import {
   Typography,
 } from "@mui/material";
 import { red } from "@mui/material/colors";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CustomDropdown from "../CustomDropdown";
 import formatDateTime from "./../../utils/dateTime";
 import { useDispatch } from "react-redux";
-import { createComment } from "../../redux/action";
+import { createComment, deleteComment } from "../../redux/action";
 import "./style.scss";
 
 function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
   const [valueComment, setValueComment] = useState("");
+  const [comments, setComments] = useState([]);
   const [like, setLike] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const [openEventComment, setEventComment] = useState(null);
+  const openComment = Boolean(openEventComment);
+  const [commentSelected, setCommentSelected] = useState("");
+  const token = localStorage.getItem("token");
   const dispatch = useDispatch();
 
   const handleShowDropdown = (event) => {
     setAnchorEl(event.currentTarget);
+  };
+  const handleShowEventDelete = (event, id) => {
+    setCommentSelected(id);
+    setEventComment(event.currentTarget);
   };
 
   const handleClickEdit = () => {
@@ -47,9 +57,11 @@ function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
     setOpenDelete(true);
   };
 
-  const handleClickBtnComment = () => {
-    const token = localStorage.getItem("token");
-    dispatch(createComment({ content: valueComment, id: post._id }, token));
+  const handleClickBtnComment = async () => {
+    await dispatch(
+      createComment({ content: valueComment, id: post._id }, token)
+    );
+    await fetchData();
   };
 
   const dataDropdown = [
@@ -63,6 +75,32 @@ function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
     },
   ];
 
+  const handleDeleteComment = async () => {
+    await dispatch(deleteComment(commentSelected, token));
+    fetchData();
+    setEventComment(null);
+  };
+
+  const fetchData = async () => {
+    try {
+      const headers = { authorization: `Bearer ${token}` };
+      const res = await axios.get(
+        `http://192.168.68.51:3000/api/comment/${post._id}`,
+        {
+          headers,
+        }
+      );
+      setComments(res.data.data);
+    } catch (error) {}
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const commentDropdown = [
+    { title: "Xóa comment", event: handleDeleteComment },
+    { title: "Sửa comment", event: null },
+  ];
   return (
     <section className="postItem">
       <Card className="postItem__card">
@@ -119,28 +157,54 @@ function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
           </IconButton>
           <Divider />
           <Box className="postItem__container">
-            <Box className="postItem__wrapper">
-              <Avatar
-                sx={{
-                  height: 36,
-                  width: 36,
-                  marginRight: 2,
-                  bgcolor: red[500],
-                  cursor: "pointer",
-                }}
-                aria-label="recipe"
-              >
-                R
-              </Avatar>
-              <Box className="postItem__theme">
-                <Typography variant="h6" sx={{ color: "#333", fontSize: 15 }}>
-                  Shrimp and Chorizo Paella
-                </Typography>
-                <Typography variant="p" sx={{ color: "#333", fontSize: 15 }}>
-                  Bình luận đầu tiên
-                </Typography>
-              </Box>
-            </Box>
+            {comments.length > 0 &&
+              comments.map((element, index) => (
+                <Box className="postItem__wrapper" key={index}>
+                  <Avatar
+                    sx={{
+                      height: 36,
+                      width: 36,
+                      marginRight: 2,
+                      bgcolor: red[500],
+                      cursor: "pointer",
+                    }}
+                    aria-label="recipe"
+                  >
+                    R
+                  </Avatar>
+                  <Box className="postItem__theme">
+                    <Typography
+                      variant="h6"
+                      sx={{ color: "#333", fontSize: 15 }}
+                    >
+                      {element.userId.fullName}
+                    </Typography>
+                    <Typography
+                      variant="p"
+                      sx={{ color: "#333", fontSize: 15 }}
+                    >
+                      {element.content}
+                    </Typography>
+                  </Box>
+                  <IconButton
+                    aria-controls={openComment ? "event_comment" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={openComment ? "true" : undefined}
+                    onClick={(e) => handleShowEventDelete(e, element._id)}
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+
+                  <CustomDropdown
+                    id="event_comment"
+                    open={openComment}
+                    anchorEl={openEventComment}
+                    setAnchorEl={setEventComment}
+                    listItem={commentDropdown}
+                  />
+                </Box>
+              ))}
+
             <Box className="postItem__wrapper">
               <Avatar
                 sx={{

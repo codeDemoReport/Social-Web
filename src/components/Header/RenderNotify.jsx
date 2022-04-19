@@ -17,10 +17,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ClearAllIcon from "@mui/icons-material/ClearAll";
 import React from "react";
 
-function RenderNotify({ isNotifyOpen, setIsNotifyOpen, listNotify }) {
+function RenderNotify({ id, open, anchorEl, setAnchorEl, listNotify }) {
   return (
     <Menu
       sx={{ marginTop: "50px", marginRight: "100px" }}
+      id={id}
       anchorOrigin={{
         vertical: "top",
         horizontal: "right",
@@ -30,8 +31,9 @@ function RenderNotify({ isNotifyOpen, setIsNotifyOpen, listNotify }) {
         vertical: "top",
         horizontal: "right",
       }}
-      open={isNotifyOpen}
-      onClose={() => setIsNotifyOpen(!isNotifyOpen)}
+      open={open}
+      onClose={() => setAnchorEl(null)}
+      anchorEl={anchorEl}
     >
       <Box style={{ width: 300, height: 400 }}>
         <Paper variant="outlined">
@@ -43,7 +45,7 @@ function RenderNotify({ isNotifyOpen, setIsNotifyOpen, listNotify }) {
           <nav>
             <List>
               {listNotify.map((element, index) => (
-                <>
+                <Box key={index}>
                   <ListItem>
                     <ListItemButton style={{ padding: "0px", margin: "0px" }}>
                       <ListItemAvatar>
@@ -61,7 +63,7 @@ function RenderNotify({ isNotifyOpen, setIsNotifyOpen, listNotify }) {
                     </IconButton>
                   </ListItem>
                   <Divider />
-                </>
+                </Box>
               ))}
             </List>
           </nav>
