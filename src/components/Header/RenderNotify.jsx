@@ -15,9 +15,33 @@ import { Box } from "@mui/system";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import ClearAllIcon from "@mui/icons-material/ClearAll";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-function RenderNotify({ id, open, anchorEl, setAnchorEl, listNotify }) {
+function RenderNotify({ id, open, anchorEl, setAnchorEl, setTotal }) {
+  const [notifies, setNotifies] = useState([]);
+
+  const fetchData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const headers = { authorization: `Bearer ${token}` };
+      const res = await axios.get(
+        `http://192.168.68.51:3000/api/notification`,
+        {
+          headers,
+        }
+      );
+      setNotifies(res.data.data);
+      setTotal(res.data.data.length);
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <Menu
       sx={{ marginTop: "50px", marginRight: "100px" }}
@@ -44,7 +68,7 @@ function RenderNotify({ id, open, anchorEl, setAnchorEl, listNotify }) {
           <Divider />
           <nav>
             <List>
-              {listNotify.map((element, index) => (
+              {notifies.map((element, index) => (
                 <Box key={index}>
                   <ListItem>
                     <ListItemButton style={{ padding: "0px", margin: "0px" }}>
@@ -52,7 +76,7 @@ function RenderNotify({ id, open, anchorEl, setAnchorEl, listNotify }) {
                         <Avatar />
                       </ListItemAvatar>
                       <ListItemText
-                        primary={element.fullName}
+                        primary={element.fromUserId.fullName}
                         secondary={element.content}
                       />
                     </ListItemButton>

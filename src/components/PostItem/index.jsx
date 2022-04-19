@@ -60,8 +60,15 @@ function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
   };
 
   const handleClickBtnComment = async () => {
-    await dispatch(createComment({ content: valueComment, postId: post._id }));
-    await fetchData();
+    await dispatch(
+      createComment({
+        content: valueComment,
+        postId: post._id,
+        toUserId: post.userId._id,
+      })
+    );
+    setValueComment("");
+    fetchData();
   };
 
   const dataDropdown = [

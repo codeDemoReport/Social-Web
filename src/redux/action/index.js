@@ -226,6 +226,14 @@ export const createComment = (params) => async (dispatch) => {
     const headers = { authorization: `Bearer ${token}` };
 
     await axios.post(`${url}/comment`, { ...params }, { headers });
+
+    //create Notify
+    const notify = {
+      toUserId: params.toUserId,
+      content: "commented your post",
+      postId: params.postId,
+    };
+    dispatch(createNotify(notify, token));
     toastSuccess("Comment Success");
   } catch (error) {
     toastError("Comment Fail");
@@ -243,5 +251,19 @@ export const deleteComment = (params) => async (dispatch) => {
     toastSuccess("Delete success");
   } catch (error) {
     toastError("Delete Fail");
+  }
+};
+
+export const createNotify = (data, token) => async (dispatch) => {
+  try {
+    const headers = { authorization: `Bearer ${token}` };
+    const res = await axios.post(
+      `${url}/notification`,
+      { ...data },
+      { headers }
+    );
+    console.log(res);
+  } catch (error) {
+    console.log(error.response);
   }
 };
