@@ -1,28 +1,28 @@
-import React, { useEffect, useState } from "react";
-import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
+import MenuIcon from "@mui/icons-material/Menu";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import {
+  AppBar,
+  Badge,
+  Box,
+  Button,
+  IconButton,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { logout } from "../../redux/action";
 import CustomDropdown from "../CustomDropdown";
 import RenderNotify from "./RenderNotify";
 
-import {
-  IconButton,
-  Badge,
-  Typography,
-  Toolbar,
-  Box,
-  AppBar,
-  Button,
-} from "@mui/material";
-
 function Header(props) {
+  const [totalNotify, setTotal] = useState(0);
+
   const [isNotifyOpen, setNotifyOpen] = useState(null);
   const openNotify = Boolean(isNotifyOpen);
-  const [totalNotify, setTotal] = useState(0);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);

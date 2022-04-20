@@ -28,6 +28,7 @@ export const login = (params) => async (dispatch) => {
       type: LOGIN,
       payload: response.data.user,
     });
+
     localStorage.setItem("token", response.data.accessToken);
     localStorage.setItem(
       "info",
@@ -38,6 +39,7 @@ export const login = (params) => async (dispatch) => {
       })
     );
     localStorage.removeItem("prevEmail");
+
     if (checkRemember) {
       localStorage.setItem("prevEmail", response.data.user.email);
     }
@@ -163,7 +165,7 @@ export const createPost = (params) => async (dispatch) => {
 
     dispatch({
       type: CREATE_POST,
-      payload: response.data,
+      payload: response.data.data,
     });
 
     if (response.data.success) toastSuccess(response.data.success);
@@ -234,7 +236,6 @@ export const createComment = (params) => async (dispatch) => {
       postId: params.postId,
     };
     dispatch(createNotify(notify, token));
-    toastSuccess("Comment Success");
   } catch (error) {
     toastError("Comment Fail");
   }
@@ -248,7 +249,6 @@ export const deleteComment = (params) => async (dispatch) => {
     const headers = { authorization: `Bearer ${token}` };
 
     await axios.delete(`${url}/comment/${id}`, { headers });
-    toastSuccess("Delete success");
   } catch (error) {
     toastError("Delete Fail");
   }
@@ -257,13 +257,30 @@ export const deleteComment = (params) => async (dispatch) => {
 export const createNotify = (data, token) => async (dispatch) => {
   try {
     const headers = { authorization: `Bearer ${token}` };
-    const res = await axios.post(
-      `${url}/notification`,
-      { ...data },
-      { headers }
-    );
-    console.log(res);
+    await axios.post(`${url}/notification`, { ...data }, { headers });
   } catch (error) {
     console.log(error.response);
+  }
+};
+
+export const handleLike = (params) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("token");
+    const headers = { authorization: `Bearer ${token}` };
+
+    const { postId, toUserId } = params;
+
+    await axios.put(`${url}/post/like/${postId}`, { ...params }, { headers });
+
+    //create Notify
+    const notify = {
+      toUserId,
+      content: "liked your post",
+      postId,
+    };
+
+    dispatch(createNotify(notify, token));
+  } catch (error) {
+    toastError("Like Fail");
   }
 };
