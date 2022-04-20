@@ -11,16 +11,14 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getNotify, logout } from "../../redux/action";
 import CustomDropdown from "../CustomDropdown";
-import RenderNotify from "./RenderNotify";
+import Notify from "../Notify";
 
 function Header(props) {
-  const [totalNotRead, setTotalNotRead] = useState(0);
-
   const [isNotifyOpen, setNotifyOpen] = useState(null);
   const openNotify = Boolean(isNotifyOpen);
 
@@ -28,21 +26,18 @@ function Header(props) {
   const open = Boolean(anchorEl);
 
   const dispatch = useDispatch();
-  const { infoUser, notifies, dataNotifies } = useSelector(
-    (state) => state.reducer
-  );
+  const { infoUser, notifies } = useSelector((state) => state.reducer);
 
   useEffect(() => {
     if (infoUser) {
       dispatch(getNotify());
     }
-  }, [infoUser, dataNotifies, dispatch]);
+  }, [infoUser, dispatch]);
 
-  useEffect(() => {
-    if (notifies) {
-      const newArr = notifies.filter((element) => element.isRead === false);
-      setTotalNotRead(newArr.length);
-    }
+  const listDataNotRead = useMemo(() => {
+    const data = notifies.filter((item) => item.isRead === false);
+    if (data.length > 0) return data.length;
+    return 0;
   }, [notifies]);
 
   const handleShowMenuAuth = (event) => {
@@ -76,6 +71,7 @@ function Header(props) {
       event: handleLogout,
     },
   ];
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -143,7 +139,7 @@ function Header(props) {
                   onClick={handleNotifyOpen}
                   id="menu-notify"
                 >
-                  <Badge badgeContent={totalNotRead} color="error">
+                  <Badge badgeContent={listDataNotRead} color="error">
                     <NotificationsIcon fontSize="large" />
                   </Badge>
                 </IconButton>
@@ -192,7 +188,7 @@ function Header(props) {
         setAnchorEl={setAnchorEl}
         listItem={listMenu}
       />
-      <RenderNotify
+      <Notify
         id="menu-notify"
         open={openNotify}
         anchorEl={isNotifyOpen}

@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { red } from "@mui/material/colors";
-import React from "react";
+import React, { memo } from "react";
 import "./style.scss";
 
 function PostStatus({ setOpen }) {
@@ -71,4 +71,5 @@ function PostStatus({ setOpen }) {
   );
 }
 
-export default PostStatus;
+// export default PostStatus;
+export default memo(PostStatus);

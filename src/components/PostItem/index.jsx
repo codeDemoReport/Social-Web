@@ -2,7 +2,6 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import SendIcon from "@mui/icons-material/Send";
 import ShareIcon from "@mui/icons-material/Share";
-import axios from "axios";
 import {
   Avatar,
   Box,
@@ -19,9 +18,8 @@ import {
   Typography,
 } from "@mui/material";
 import { red } from "@mui/material/colors";
-import React, { useState, useEffect } from "react";
-import CustomDropdown from "../CustomDropdown";
-import formatDateTime from "./../../utils/dateTime";
+import axios from "axios";
+import React, { memo, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
   createComment,
@@ -29,6 +27,8 @@ import {
   editCommentAction,
   handleLike,
 } from "../../redux/action";
+import CustomDropdown from "../CustomDropdown";
+import formatDateTime from "./../../utils/dateTime";
 import "./style.scss";
 
 function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
@@ -50,6 +50,7 @@ function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
   const handleShowDropdown = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleShowEventDelete = (event, id, content) => {
     setCommentSelected(id);
     setDataCommentEdit(content);
@@ -126,15 +127,17 @@ function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
   };
 
   const fetchData = async () => {
+    const token = localStorage.getItem("token");
+    const headers = { authorization: `Bearer ${token}` };
+
     try {
-      const token = localStorage.getItem("token");
-      const headers = { authorization: `Bearer ${token}` };
       const res = await axios.get(
         `http://192.168.68.51:3000/api/comment/${post._id}`,
         {
           headers,
         }
       );
+
       setComments(res.data.data);
     } catch (error) {}
   };
@@ -313,4 +316,4 @@ function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
   );
 }
 
-export default PostItem;
+export default memo(PostItem);

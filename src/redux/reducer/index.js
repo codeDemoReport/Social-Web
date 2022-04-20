@@ -8,7 +8,6 @@ import {
   LOADING,
   LOGIN,
   GET_NOTIFIES,
-  CREATE_NOTIFIES,
 } from "../../utils/constant";
 
 const initialState = {
@@ -20,7 +19,6 @@ const initialState = {
   dataDelete: {},
   dataEdit: {},
   notifies: [],
-  dataNotifies: {},
 };
 
 function reducer(state = initialState, action) {
@@ -71,12 +69,6 @@ function reducer(state = initialState, action) {
       return {
         ...state,
         notifies: [...action.payload],
-      };
-    }
-    case CREATE_NOTIFIES: {
-      return {
-        ...state,
-        dataNotifies: { ...action.payload },
       };
     }
     default:

@@ -25,7 +25,6 @@ function App() {
 
   return (
     <div className="App">
-      <BackdropSimple />
       <Router history={history}>
         <Header />
         <Switch>
@@ -37,6 +36,7 @@ function App() {
           <PrivateRouter path="/post" component={Post} exact />
         </Switch>
       </Router>
+      <BackdropSimple />
       <ToastContainer />
     </div>
   );
