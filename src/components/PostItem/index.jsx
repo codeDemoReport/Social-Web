@@ -14,6 +14,7 @@ import {
   CardMedia,
   Divider,
   IconButton,
+  Input,
   TextField,
   Typography,
 } from "@mui/material";
@@ -22,7 +23,12 @@ import React, { useState, useEffect } from "react";
 import CustomDropdown from "../CustomDropdown";
 import formatDateTime from "./../../utils/dateTime";
 import { useDispatch } from "react-redux";
-import { createComment, deleteComment, handleLike } from "../../redux/action";
+import {
+  createComment,
+  deleteComment,
+  editCommentAction,
+  handleLike,
+} from "../../redux/action";
 import "./style.scss";
 
 function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
@@ -30,6 +36,8 @@ function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
   const [comments, setComments] = useState([]);
   const [like, setLike] = useState(() => post.likes.includes(post.userId._id));
   const [commentSelected, setCommentSelected] = useState("");
+  const [editComment, setEditComment] = useState(false);
+  const [dataCommentEdit, setDataCommentEdit] = useState("");
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -42,9 +50,28 @@ function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
   const handleShowDropdown = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleShowEventDelete = (event, id) => {
+  const handleShowEventDelete = (event, id, content) => {
     setCommentSelected(id);
+    setDataCommentEdit(content);
     setEventComment(event.currentTarget);
+  };
+
+  const handleShowEdit = () => {
+    setEditComment(true);
+  };
+
+  const handleOffEdit = () => {
+    setEditComment(false);
+    setDataCommentEdit("");
+  };
+
+  const handleEditComment = async (idComment) => {
+    if (dataCommentEdit) {
+      await dispatch(editCommentAction(idComment, dataCommentEdit));
+      fetchData();
+    }
+
+    handleOffEdit();
   };
 
   const handleClickEdit = () => {
@@ -118,7 +145,7 @@ function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
 
   const commentDropdown = [
     { title: "Xóa comment", event: handleDeleteComment },
-    { title: "Sửa comment", event: null },
+    { title: "Sửa comment", event: handleShowEdit },
   ];
 
   return (
@@ -196,18 +223,37 @@ function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
                     >
                       {element.userId.fullName}
                     </Typography>
-                    <Typography
-                      variant="p"
-                      sx={{ color: "#333", fontSize: 15 }}
-                    >
-                      {element.content}
-                    </Typography>
+                    {editComment && commentSelected === element._id ? (
+                      <>
+                        <Input
+                          value={dataCommentEdit}
+                          onChange={(e) => setDataCommentEdit(e.target.value)}
+                          sx={{ width: "100%" }}
+                        />
+                        <Button
+                          onClick={() => handleEditComment(element._id)}
+                          sx={{ marginLeft: "330px" }}
+                        >
+                          Edit
+                        </Button>
+                        <Button onClick={handleOffEdit}>Cancel</Button>
+                      </>
+                    ) : (
+                      <Typography
+                        variant="p"
+                        sx={{ color: "#333", fontSize: 15 }}
+                      >
+                        {element.content}
+                      </Typography>
+                    )}
                   </Box>
                   <IconButton
                     aria-controls={openComment ? "event_comment" : undefined}
                     aria-haspopup="true"
                     aria-expanded={openComment ? "true" : undefined}
-                    onClick={(e) => handleShowEventDelete(e, element._id)}
+                    onClick={(e) =>
+                      handleShowEventDelete(e, element._id, element.content)
+                    }
                   >
                     <MoreVertIcon />
                   </IconButton>
