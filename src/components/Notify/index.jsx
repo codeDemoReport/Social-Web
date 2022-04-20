@@ -16,13 +16,17 @@ import {
 import { Box } from "@mui/system";
 import React, { memo } from "react";
 import { useDispatch } from "react-redux";
-import { deleteAllNotify, deleteNotify } from "../../redux/action";
+import { deleteAllNotify, deleteNotify, isRead } from "../../redux/action";
 
 function Notify({ id, open, anchorEl, setAnchorEl, notifies }) {
   const dispatch = useDispatch();
 
   const handleDeleteNotify = (id) => {
     dispatch(deleteNotify(id));
+  };
+
+  const handleReadNotify = (id) => {
+    dispatch(isRead(id));
   };
 
   const handleDeleteAllNotify = () => {
