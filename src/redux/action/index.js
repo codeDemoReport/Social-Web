@@ -345,22 +345,25 @@ export const handleLike = (params) => async (dispatch) => {
 };
 
 export const isRead = (id) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("token");
-    const headers = { authorization: `Bearer ${token}` };
-    await axios.put(`${url}/notification/${id}`,{},  { headers })
-    dispatch(getNotify())
-  } catch (error) {
-    console.log(error.response)
-  }
-}
+  const token = localStorage.getItem("token");
+  const headers = { authorization: `Bearer ${token}` };
 
-export const editCommentAction = ( idComment, content) => async (dispatch) => {
   try {
-    const token = localStorage.getItem("token");
-    const headers = { authorization: `Bearer ${token}` };
-    await axios.put(`${url}/comment/${idComment}`, {content}, { headers })
+    await axios.put(`${url}/notification/${id}`, {}, { headers });
+
+    dispatch(getNotify());
   } catch (error) {
-    console.log(error.response)
+    console.log(error.response);
   }
-}
+};
+
+export const editCommentAction = (idComment, content) => async (dispatch) => {
+  const token = localStorage.getItem("token");
+  const headers = { authorization: `Bearer ${token}` };
+
+  try {
+    await axios.put(`${url}/comment/${idComment}`, { content }, { headers });
+  } catch (error) {
+    console.log(error.response);
+  }
+};

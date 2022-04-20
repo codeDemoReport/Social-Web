@@ -65,7 +65,10 @@ function Notify({ id, open, anchorEl, setAnchorEl, notifies }) {
               <Box key={index}>
                 <Divider />
                 <ListItem>
-                  <ListItemButton style={{ padding: "0 4px", margin: 0 }}>
+                  <ListItemButton
+                    style={{ padding: "0 4px", margin: 0, borderRadius: 4 }}
+                    onClick={() => handleReadNotify(element._id)}
+                  >
                     <ListItemAvatar>
                       <Avatar />
                     </ListItemAvatar>
