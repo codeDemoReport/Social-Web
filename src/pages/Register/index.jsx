@@ -18,7 +18,7 @@ function Register(props) {
     fullName: "",
     email: "",
     password: "",
-    cfPassword: "",
+    confirmPassword: "",
   };
 
   const validateSchema = Yup.object().shape({
@@ -58,7 +58,7 @@ function Register(props) {
               <CustomField
                 key={element.id}
                 name={element.name}
-                label={element.lable}
+                label={element.label}
                 placeholder={element.placeholder}
                 type={element.type}
               />

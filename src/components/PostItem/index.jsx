@@ -22,13 +22,13 @@ import React, { useState, useEffect } from "react";
 import CustomDropdown from "../CustomDropdown";
 import formatDateTime from "./../../utils/dateTime";
 import { useDispatch } from "react-redux";
-import { createComment, deleteComment } from "../../redux/action";
+import { createComment, deleteComment, handleLike } from "../../redux/action";
 import "./style.scss";
 
 function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
   const [valueComment, setValueComment] = useState("");
   const [comments, setComments] = useState([]);
-  const [like, setLike] = useState(false);
+  const [like, setLike] = useState(() => post.likes.includes(post.userId._id));
   const [commentSelected, setCommentSelected] = useState("");
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -57,6 +57,16 @@ function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
     setTemp(post);
     setAnchorEl(null);
     setOpenDelete(true);
+  };
+
+  const handleClickLike = () => {
+    dispatch(
+      handleLike({
+        postId: post._id,
+        toUserId: post.userId._id,
+      })
+    );
+    setLike(!like);
   };
 
   const handleClickBtnComment = async () => {
@@ -156,10 +166,7 @@ function PostItem({ post, setTemp, setOpenDelete, setOpenAddOrEdit }) {
           />
         </CardContent>
         <CardActions disableSpacing sx={{ display: "block" }}>
-          <IconButton
-            aria-label="add to favorites"
-            onClick={() => setLike(!like)}
-          >
+          <IconButton aria-label="add to favorites" onClick={handleClickLike}>
             <FavoriteIcon className={like ? "postItem__icon--like" : ""} />
           </IconButton>
           <IconButton aria-label="share">
