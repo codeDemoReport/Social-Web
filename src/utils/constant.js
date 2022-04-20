@@ -12,7 +12,9 @@ export const EMAIL_VERIFY = "EMAIL_VERIFY";
 
 export const LOADING = "LOADING";
 
-export const NOTIFIES = "NOTIFIES";
+export const GET_NOTIFIES = "GET_NOTIFIES";
+
+export const CREATE_NOTIFIES = "CREATE_NOTIFIES";
 
 export const registerField = [
   {

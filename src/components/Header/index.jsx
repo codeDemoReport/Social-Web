@@ -14,7 +14,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { logout } from "../../redux/action";
+import { getNotify, logout } from "../../redux/action";
 import CustomDropdown from "../CustomDropdown";
 import RenderNotify from "./RenderNotify";
 
@@ -28,21 +28,22 @@ function Header(props) {
   const open = Boolean(anchorEl);
 
   const dispatch = useDispatch();
-  const { reducer } = useSelector((state) => state);
-  const [data, setData] = useState(reducer.infoUser);
+  const { infoUser, notifies, dataNotifies } = useSelector(
+    (state) => state.reducer
+  );
 
   useEffect(() => {
-    if (reducer.infoUser) setData(reducer.infoUser);
-  }, [reducer.infoUser, dispatch]);
+    if (infoUser) {
+      dispatch(getNotify());
+    }
+  }, [infoUser, dataNotifies, dispatch]);
 
   useEffect(() => {
-    if (reducer.notifies) {
-      const newArr = reducer.notifies.filter(
-        (element) => element.isRead === false
-      );
+    if (notifies) {
+      const newArr = notifies.filter((element) => element.isRead === false);
       setTotalNotRead(newArr.length);
     }
-  }, [reducer.notifies]);
+  }, [notifies]);
 
   const handleShowMenuAuth = (event) => {
     setAnchorEl(event.currentTarget);
@@ -120,7 +121,7 @@ function Header(props) {
             </Link>
           </Button>
           <Box sx={{ flexGrow: 1 }} />
-          {data.fullName ? (
+          {infoUser.fullName ? (
             <>
               <Box sx={{ display: { xs: "none", md: "flex" } }}>
                 <IconButton
@@ -157,7 +158,7 @@ function Header(props) {
                 >
                   <AccountCircle fontSize="large" />
                   <Typography style={{ marginLeft: 5, fontSize: 20 }}>
-                    {data.fullName}
+                    {infoUser.fullName}
                   </Typography>
                 </IconButton>
               </Box>
@@ -196,7 +197,7 @@ function Header(props) {
         open={openNotify}
         anchorEl={isNotifyOpen}
         setAnchorEl={setNotifyOpen}
-        notifies={reducer.notifies}
+        notifies={notifies}
       />
     </Box>
   );

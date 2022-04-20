@@ -1,5 +1,6 @@
 import axios from "axios";
 import {
+  CREATE_NOTIFIES,
   CREATE_POST,
   DELETE_POST,
   EDIT_POST,
@@ -7,7 +8,7 @@ import {
   GET_LIST_POST,
   LOADING,
   LOGIN,
-  NOTIFIES,
+  GET_NOTIFIES,
 } from "../../utils/constant";
 import history from "../../utils/history";
 import { toastError, toastSuccess } from "../../utils/toast";
@@ -259,7 +260,17 @@ export const deleteComment = (params) => async (dispatch) => {
 export const createNotify = (data, token) => async (dispatch) => {
   try {
     const headers = { authorization: `Bearer ${token}` };
-    await axios.post(`${url}/notification`, { ...data }, { headers });
+
+    const response = await axios.post(
+      `${url}/notification`,
+      { ...data },
+      { headers }
+    );
+
+    dispatch({
+      type: CREATE_NOTIFIES,
+      payload: response.data,
+    });
   } catch (error) {
     console.log(error.response);
   }
@@ -273,8 +284,8 @@ export const getNotify = () => async (dispatch) => {
     const res = await axios.get(`${url}/notification`, { headers });
 
     dispatch({
-      type: NOTIFIES,
-      payload: [...res.data.data],
+      type: GET_NOTIFIES,
+      payload: res.data.data,
     });
   } catch (error) {
     console.log(error.response);
