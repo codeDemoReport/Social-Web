@@ -7,6 +7,7 @@ import {
   GET_LIST_POST,
   LOADING,
   LOGIN,
+  NOTIFIES,
 } from "../../utils/constant";
 import history from "../../utils/history";
 import { toastError, toastSuccess } from "../../utils/toast";
@@ -235,6 +236,7 @@ export const createComment = (params) => async (dispatch) => {
       content: "commented your post",
       postId: params.postId,
     };
+
     dispatch(createNotify(notify, token));
   } catch (error) {
     toastError("Comment Fail");
@@ -263,6 +265,48 @@ export const createNotify = (data, token) => async (dispatch) => {
   }
 };
 
+export const getNotify = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("token");
+    const headers = { authorization: `Bearer ${token}` };
+
+    const res = await axios.get(`${url}/notification`, { headers });
+
+    dispatch({
+      type: NOTIFIES,
+      payload: [...res.data.data],
+    });
+  } catch (error) {
+    console.log(error.response);
+  }
+};
+
+export const deleteNotify = (id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("token");
+    const headers = { authorization: `Bearer ${token}` };
+
+    await axios.delete(`${url}/notification/${id}`, { headers });
+
+    dispatch(getNotify());
+  } catch (error) {
+    console.log(error.response);
+  }
+};
+
+export const deleteAllNotify = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("token");
+    const headers = { authorization: `Bearer ${token}` };
+
+    await axios.delete(`${url}/notification`, { headers });
+
+    dispatch(getNotify());
+  } catch (error) {
+    console.log(error.response);
+  }
+};
+
 export const handleLike = (params) => async (dispatch) => {
   try {
     const token = localStorage.getItem("token");
@@ -270,16 +314,20 @@ export const handleLike = (params) => async (dispatch) => {
 
     const { postId, toUserId } = params;
 
-    await axios.put(`${url}/post/like/${postId}`, { ...params }, { headers });
+    const response = await axios.put(
+      `${url}/post/like/${postId}`,
+      { ...params },
+      { headers }
+    );
 
-    //create Notify
-    const notify = {
-      toUserId,
-      content: "liked your post",
-      postId,
-    };
-
-    dispatch(createNotify(notify, token));
+    if (response.status === 200) {
+      const notify = {
+        toUserId,
+        content: "liked your post",
+        postId,
+      };
+      dispatch(createNotify(notify, token));
+    }
   } catch (error) {
     toastError("Like Fail");
   }
