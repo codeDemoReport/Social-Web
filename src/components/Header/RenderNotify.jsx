@@ -17,12 +17,16 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ClearAllIcon from "@mui/icons-material/ClearAll";
 import React from "react";
 import { useDispatch } from "react-redux";
-import { deleteAllNotify, deleteNotify } from "../../redux/action";
+import { deleteAllNotify, deleteNotify, isRead } from "../../redux/action";
 
 function RenderNotify({ id, open, anchorEl, setAnchorEl, notifies }) {
   const dispatch = useDispatch();
   const handleDeleteNotify = (id) => {
     dispatch(deleteNotify(id));
+  };
+
+  const handleReadNotify = (id) => {
+    dispatch(isRead(id));
   };
 
   const handleDeleteAllNotify = () => {
@@ -61,7 +65,10 @@ function RenderNotify({ id, open, anchorEl, setAnchorEl, notifies }) {
                 <Box key={index}>
                   <Divider />
                   <ListItem>
-                    <ListItemButton style={{ padding: "0 4px", margin: 0 }}>
+                    <ListItemButton
+                      style={{ padding: "0 4px", margin: 0 }}
+                      onClick={() => handleReadNotify(element._id)}
+                    >
                       <ListItemAvatar>
                         <Avatar />
                       </ListItemAvatar>
