@@ -354,3 +354,13 @@ export const isRead = (id) => async (dispatch) => {
     console.log(error.response)
   }
 }
+
+export const editCommentAction = ( idComment, content) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("token");
+    const headers = { authorization: `Bearer ${token}` };
+    await axios.put(`${url}/comment/${idComment}`, {content}, { headers })
+  } catch (error) {
+    console.log(error.response)
+  }
+}
