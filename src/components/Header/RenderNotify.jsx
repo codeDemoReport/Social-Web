@@ -46,19 +46,22 @@ function RenderNotify({ id, open, anchorEl, setAnchorEl, notifies }) {
       onClose={() => setAnchorEl(null)}
       anchorEl={anchorEl}
     >
-      <Box style={{ width: 300, height: 400 }}>
+      <Box style={{ width: 300, maxHeight: 400, padding: "8px 0" }}>
         <Paper variant="outlined">
-          <IconButton style={{ fontSize: 13 }} onClick={handleDeleteAllNotify}>
-            <ClearAllIcon style={{ marginRight: "5px" }} />
+          <IconButton
+            style={{ fontSize: 13, marginLeft: 10 }}
+            onClick={handleDeleteAllNotify}
+          >
+            <ClearAllIcon style={{ marginRight: 6 }} />
             Delete All
           </IconButton>
-          <Divider />
           <nav>
-            <List>
+            <List style={{ padding: 0 }}>
               {notifies.map((element, index) => (
                 <Box key={index}>
+                  <Divider />
                   <ListItem>
-                    <ListItemButton style={{ padding: "0px", margin: "0px" }}>
+                    <ListItemButton style={{ padding: "0 4px", margin: 0 }}>
                       <ListItemAvatar>
                         <Avatar />
                       </ListItemAvatar>
@@ -67,13 +70,18 @@ function RenderNotify({ id, open, anchorEl, setAnchorEl, notifies }) {
                         secondary={element.content}
                       />
                     </ListItemButton>
-                    {!element.isRead && <Badge color="primary" variant="dot" />}
+                    {!element.isRead && (
+                      <Badge
+                        color="primary"
+                        variant="dot"
+                        sx={{ marginLeft: 2 }}
+                      />
+                    )}
 
                     <IconButton onClick={() => handleDeleteNotify(element._id)}>
                       <DeleteIcon />
                     </IconButton>
                   </ListItem>
-                  <Divider />
                 </Box>
               ))}
             </List>
