@@ -1,11 +1,11 @@
-import { Box, Container, Typography } from "@mui/material";
 import EmailIcon from "@mui/icons-material/Email";
+import { Box, Container, Typography } from "@mui/material";
 import React from "react";
-import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 function VerifyEmail(props) {
-  const { reducer } = useSelector((state) => state);
+  const { emailVerify } = useSelector((state) => state.reducer);
 
   return (
     <Container>
@@ -18,13 +18,13 @@ function VerifyEmail(props) {
             Verify your email address
           </Typography>
           <Typography variant="p">
-            We are sent an email to {<p>{reducer.emailVerify}</p>} to verify
-            your email address and active your account. The link in the email
-            will expire in 24 hours.
+            We are sent an email to <b>{emailVerify}</b> to verify your email
+            address and active your account. The link in the email will expire
+            in 24 hours.
           </Typography>
           <Typography>
             <br />
-            <Link to={"/register"}>Click here</Link> if you did not recieve an
+            <Link to={"/register"}>Click here</Link> if you did not received an
             email or would like to change the email address your signed up with
           </Typography>
         </Box>

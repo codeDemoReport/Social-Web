@@ -1,6 +1,5 @@
 import axios from "axios";
 import {
-  CREATE_NOTIFIES,
   CREATE_POST,
   DELETE_POST,
   EDIT_POST,
@@ -15,14 +14,18 @@ import { toastError, toastSuccess } from "../../utils/toast";
 
 const url = "http://192.168.68.51:3000/api";
 
+export const loading = (params) => async (dispatch) => {
+  dispatch({
+    type: LOADING,
+    payload: params,
+  });
+};
+
 export const login = (params) => async (dispatch) => {
   const { checkRemember } = params;
 
   try {
-    dispatch({
-      type: LOADING,
-      payload: true,
-    });
+    dispatch(loading(true));
 
     const response = await axios.post(`${url}/auth/login`, { ...params });
 
@@ -32,23 +35,14 @@ export const login = (params) => async (dispatch) => {
     });
 
     localStorage.setItem("token", response.data.accessToken);
-    localStorage.setItem(
-      "info",
-      JSON.stringify({
-        email: response.data.user.email,
-        fullName: response.data.user.fullName,
-        role: response.data.user.isAdmin,
-      })
-    );
     localStorage.removeItem("prevEmail");
 
     if (checkRemember) {
       localStorage.setItem("prevEmail", response.data.user.email);
     }
-    dispatch({
-      type: LOADING,
-      payload: false,
-    });
+
+    dispatch(loading(false));
+
     toastSuccess(response.data.msg);
     history.push("/post");
   } catch (error) {
@@ -62,23 +56,21 @@ export const login = (params) => async (dispatch) => {
 
 export const register = (data) => async (dispatch) => {
   try {
-    dispatch({
-      type: LOADING,
-      payload: true,
-    });
+    dispatch(loading(true));
+
     const res = await axios.post(`${url}/auth/register`, data);
     dispatch({
       type: EMAIL_VERIFY,
       payload: data.email,
     });
-    dispatch({
-      type: LOADING,
-      payload: false,
-    });
+
+    dispatch(loading(false));
+
     toastSuccess(res.data.msg);
     history.push("/verify-email");
   } catch (error) {
     toastError(error.response.data.msg);
+
     dispatch({
       type: LOADING,
       payload: false,
@@ -92,8 +84,9 @@ export const logout = () => async (dispatch) => {
       type: LOGIN,
       payload: {},
     });
+
     localStorage.removeItem("token");
-    localStorage.removeItem("info");
+
     history.push("/");
   } catch (error) {
     toastError(error.response.data.msg);
@@ -138,6 +131,7 @@ export const imageUpload = async (image) => {
 export const getListPost = (params) => async (dispatch) => {
   const token = localStorage.getItem("token");
   const headers = { authorization: `Bearer ${token}` };
+
   try {
     const response = await axios.get(`${url}/post`, { headers });
 
@@ -156,14 +150,19 @@ export const createPost = (params) => async (dispatch) => {
   const headers = { authorization: `Bearer ${token}` };
 
   const { photo } = params;
-  const imageUpdated = await imageUpload(photo);
 
   try {
+    dispatch(loading(true));
+
+    const imageUpdated = await imageUpload(photo);
+
     const response = await axios.post(
       `${url}/post`,
       { ...params, photo: imageUpdated },
       { headers }
     );
+
+    dispatch(loading(false));
 
     dispatch({
       type: CREATE_POST,
@@ -184,7 +183,11 @@ export const deletePost = (params) => async (dispatch) => {
   const { id } = params;
 
   try {
+    dispatch(loading(true));
+
     const response = await axios.delete(`${url}/post/${id}`, { headers });
+
+    dispatch(loading(false));
 
     dispatch({
       type: DELETE_POST,
@@ -203,14 +206,19 @@ export const editPost = (params) => async (dispatch) => {
   const headers = { authorization: `Bearer ${token}` };
 
   const { id, photo } = params;
-  const imageUpdated = await imageUpload(photo);
 
   try {
+    dispatch(loading(true));
+
+    const imageUpdated = await imageUpload(photo);
+
     const response = await axios.put(
       `${url}/post/${id}`,
       { ...params, photo: imageUpdated },
       { headers }
     );
+
+    dispatch(loading(false));
 
     dispatch({
       type: EDIT_POST,
@@ -225,10 +233,10 @@ export const editPost = (params) => async (dispatch) => {
 };
 
 export const createComment = (params) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("token");
-    const headers = { authorization: `Bearer ${token}` };
+  const token = localStorage.getItem("token");
+  const headers = { authorization: `Bearer ${token}` };
 
+  try {
     await axios.post(`${url}/comment`, { ...params }, { headers });
 
     //create Notify
@@ -245,12 +253,11 @@ export const createComment = (params) => async (dispatch) => {
 };
 
 export const deleteComment = (params) => async (dispatch) => {
+  const token = localStorage.getItem("token");
+  const headers = { authorization: `Bearer ${token}` };
   const { id } = params;
 
   try {
-    const token = localStorage.getItem("token");
-    const headers = { authorization: `Bearer ${token}` };
-
     await axios.delete(`${url}/comment/${id}`, { headers });
   } catch (error) {
     toastError("Delete Fail");
@@ -258,29 +265,22 @@ export const deleteComment = (params) => async (dispatch) => {
 };
 
 export const createNotify = (data, token) => async (dispatch) => {
+  const headers = { authorization: `Bearer ${token}` };
+
   try {
-    const headers = { authorization: `Bearer ${token}` };
+    await axios.post(`${url}/notification`, { ...data }, { headers });
 
-    const response = await axios.post(
-      `${url}/notification`,
-      { ...data },
-      { headers }
-    );
-
-    dispatch({
-      type: CREATE_NOTIFIES,
-      payload: response.data,
-    });
+    dispatch(getNotify());
   } catch (error) {
     console.log(error.response);
   }
 };
 
 export const getNotify = () => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("token");
-    const headers = { authorization: `Bearer ${token}` };
+  const token = localStorage.getItem("token");
+  const headers = { authorization: `Bearer ${token}` };
 
+  try {
     const res = await axios.get(`${url}/notification`, { headers });
 
     dispatch({
@@ -293,10 +293,10 @@ export const getNotify = () => async (dispatch) => {
 };
 
 export const deleteNotify = (id) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("token");
-    const headers = { authorization: `Bearer ${token}` };
+  const token = localStorage.getItem("token");
+  const headers = { authorization: `Bearer ${token}` };
 
+  try {
     await axios.delete(`${url}/notification/${id}`, { headers });
 
     dispatch(getNotify());
@@ -306,10 +306,10 @@ export const deleteNotify = (id) => async (dispatch) => {
 };
 
 export const deleteAllNotify = () => async (dispatch) => {
-  try {
-    const token = localStorage.getItem("token");
-    const headers = { authorization: `Bearer ${token}` };
+  const token = localStorage.getItem("token");
+  const headers = { authorization: `Bearer ${token}` };
 
+  try {
     await axios.delete(`${url}/notification`, { headers });
 
     dispatch(getNotify());
@@ -319,12 +319,12 @@ export const deleteAllNotify = () => async (dispatch) => {
 };
 
 export const handleLike = (params) => async (dispatch) => {
+  const token = localStorage.getItem("token");
+  const headers = { authorization: `Bearer ${token}` };
+
+  const { postId, toUserId } = params;
+
   try {
-    const token = localStorage.getItem("token");
-    const headers = { authorization: `Bearer ${token}` };
-
-    const { postId, toUserId } = params;
-
     const response = await axios.put(
       `${url}/post/like/${postId}`,
       { ...params },

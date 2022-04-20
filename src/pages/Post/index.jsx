@@ -42,6 +42,8 @@ function Post(props) {
     setOpenDelete(false);
   };
 
+  console.log("Post");
+
   return (
     <section>
       <PostStatus setOpen={setOpenAddOrEdit} />
@@ -54,33 +56,35 @@ function Post(props) {
           setOpenAddOrEdit={setOpenAddOrEdit}
         />
       ))}
-      <DialogAddOrEdit
-        open={openAddOrEdit}
-        setOpen={setOpenAddOrEdit}
-        temp={temp}
-        setTemp={setTemp}
-      />
-      <div>
-        <Dialog
-          open={openDelete}
-          onClose={handleCloseDelete}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">Confirm</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Do you want to delete the post #{temp.content}?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleDelete}>OK</Button>
-            <Button onClick={handleCloseDelete} autoFocus>
-              Cancel
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </div>
+      {openAddOrEdit && (
+        <DialogAddOrEdit
+          open={openAddOrEdit}
+          setOpen={setOpenAddOrEdit}
+          temp={temp}
+          setTemp={setTemp}
+        />
+      )}
+
+      {/* Dialog Delete */}
+      <Dialog
+        open={openDelete}
+        onClose={handleCloseDelete}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Confirm</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Do you want to delete the post #<b>{temp.content}</b>?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDelete}>OK</Button>
+          <Button onClick={handleCloseDelete} autoFocus>
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
     </section>
   );
 }

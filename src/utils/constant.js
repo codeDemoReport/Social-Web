@@ -14,8 +14,6 @@ export const LOADING = "LOADING";
 
 export const GET_NOTIFIES = "GET_NOTIFIES";
 
-export const CREATE_NOTIFIES = "CREATE_NOTIFIES";
-
 export const registerField = [
   {
     id: 1,
